@@ -22,6 +22,10 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
+	virtual ~InputCube() {}
+
+	/*-----     -----     -----     -----      -----     -----*/
+
 	virtual const unsigned int getTermsCount() const = 0;
 
 	virtual const CubeTerm::Enum getCubeTerm( unsigned int _index ) const = 0;
@@ -42,7 +46,7 @@ public:
 
 	virtual std::auto_ptr< const InputCube > join( InputCube const& _other ) const = 0;
 
-	virtual std::auto_ptr< const InputCube > complement( InputCube const& _other ) const = 0;
+	virtual std::auto_ptr< const InputCube > complement() const = 0;
 
 	virtual std::auto_ptr< const InputCube > summ( InputCube const& _other ) const = 0;
 
