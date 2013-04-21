@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			>
 			<Tool
@@ -62,6 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="QtCored4.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
@@ -136,6 +137,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="QtCore4.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
@@ -217,7 +219,23 @@
 				Name="Model"
 				>
 				<File
-					RelativePath=".\sources\to_delete.cpp"
+					RelativePath=".\sources\fle_cube_term_static_methods_impl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\sources\fle_input_cube_impl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\sources\fle_input_cube_impl.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\sources\fle_knowledge_base_impl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\sources\fle_knowledge_base_impl.hpp"
 					>
 				</File>
 			</Filter>

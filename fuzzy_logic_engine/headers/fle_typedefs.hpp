@@ -13,7 +13,7 @@ namespace FuzzyLogicEngine
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
 	typedef
-		std::vector< CubeTerm >
+		std::vector< CubeTerm::Enum >
 		InputTermsVector;
 
 	typedef

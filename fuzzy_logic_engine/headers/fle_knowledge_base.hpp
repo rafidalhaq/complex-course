@@ -25,6 +25,10 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
+	virtual ~KnowledgeBase() {}
+
+	/*-----     -----     -----     -----      -----     -----*/
+
 	virtual const unsigned int getProductionRulesCount() const = 0;
 
 	virtual const unsigned int getProductionRulesCount( OutputTerm::Enum _term ) const = 0;
@@ -49,7 +53,7 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	boost::shared_ptr< KnowledgeBase > createCompactAndMinimizedKnowledgeBase() = 0;
+	virtual boost::shared_ptr< KnowledgeBase > createCompactAndMinimizedKnowledgeBase() = 0;
 
 	/*-----     -----     -----     -----      -----     -----*/
 
