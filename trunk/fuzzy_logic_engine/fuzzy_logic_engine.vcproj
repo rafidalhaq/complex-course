@@ -215,6 +215,14 @@
 		<Filter
 			Name="Sources"
 			>
+			<File
+				RelativePath=".\sources\fle_accessor_impl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\sources\fle_accessor_impl.hpp"
+				>
+			</File>
 			<Filter
 				Name="Model"
 				>
