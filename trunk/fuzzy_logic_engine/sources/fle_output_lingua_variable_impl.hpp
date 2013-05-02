@@ -1,5 +1,9 @@
-#ifndef _FUZZY_LOGIC_ENGINE__LINGUA_VARIABLE_
-#define _FUZZY_LOGIC_ENGINE__LINGUA_VARIABLE_
+#ifndef _FUZZY_LOGIC_ENGINE__OUTPUT_LINGUA_VARIABLE_IMPL_
+#define _FUZZY_LOGIC_ENGINE__OUTPUT_LINGUA_VARIABLE_IMPL_
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+#include "fuzzy_logic_engine/sources/fle_lingua_variable_impl.hpp"
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
@@ -8,8 +12,8 @@ namespace FuzzyLogicEngine
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
-class LinguaVariable
-	: public boost::noncopyable
+class OutputLinguaVariableImpl
+	: public LinguaVariableImpl
 {
 
 	/*-----     -----     -----     -----      -----     -----*/
@@ -18,29 +22,26 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	struct Kind
+	OutputLinguaVariableImpl( QString const& _name )
+		:	LinguaVariableImpl( _name )
 	{
-		enum Enum
-		{
-			Input, Output
-		};
-	};
+	}
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	virtual ~LinguaVariable() {}
+	/*virtual*/ const Kind::Enum getKind() const
+	{
+		return Kind::Output;
+	}
+
+	/*virtual*/ const unsigned int getAlphabetTermsCount() const
+	{
+		return 5;
+	}
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	virtual const Kind::Enum getKind() const = 0;
-
-	virtual QString const& getName() const = 0;
-
-	virtual const unsigned int getAlphabetTermsCount() const = 0;
-
-	/*-----     -----     -----     -----      -----     -----*/
-
-}; // class LinguaVariable
+}; // class OutputLinguaVariableImpl
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
@@ -48,4 +49,4 @@ public:
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
-#endif // _FUZZY_LOGIC_ENGINE__LINGUA_VARIABLE_
+#endif // _FUZZY_LOGIC_ENGINE__OUTPUT_LINGUA_VARIABLE_IMPL_

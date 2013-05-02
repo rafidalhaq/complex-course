@@ -238,6 +238,34 @@
 					RelativePath=".\sources\fle_knowledge_base_impl.hpp"
 					>
 				</File>
+				<Filter
+					Name="Lingua Variables"
+					>
+					<File
+						RelativePath=".\sources\fle_input_lingua_variable_impl.hpp"
+						>
+					</File>
+					<File
+						RelativePath=".\sources\fle_lingua_variable_impl.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\sources\fle_lingua_variable_impl.hpp"
+						>
+					</File>
+					<File
+						RelativePath=".\sources\fle_lingua_variables_dictionary_impl.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\sources\fle_lingua_variables_dictionary_impl.hpp"
+						>
+					</File>
+					<File
+						RelativePath=".\sources\fle_output_lingua_variable_impl.hpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter

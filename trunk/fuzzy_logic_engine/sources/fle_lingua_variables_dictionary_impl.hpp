@@ -1,9 +1,9 @@
-#ifndef _FUZZY_LOGIC_ENGINE__LINGUA_VARIABLES_DICTIONARY_
-#define _FUZZY_LOGIC_ENGINE__LINGUA_VARIABLES_DICTIONARY_
+#ifndef _FUZZY_LOGIC_ENGINE__LINGUA_VARIABLES_DICTIONARY_IMPL_
+#define _FUZZY_LOGIC_ENGINE__LINGUA_VARIABLES_DICTIONARY_IMPL_
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
-#include "fuzzy_logic_engine/headers/fle_lingua_variable.hpp"
+#include "fuzzy_logic_engine/headers/fle_lingua_variables_dictionary.hpp"
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
@@ -12,8 +12,8 @@ namespace FuzzyLogicEngine
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
-class LinguaVariablesDictionary
-	: public boost::noncopyable
+class LinguaVariablesDictionaryImpl
+	: public LinguaVariablesDictionary
 {
 
 	/*-----     -----     -----     -----      -----     -----*/
@@ -22,35 +22,43 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	virtual ~LinguaVariablesDictionary() {}
+	/*virtual*/ const unsigned int getInputLinguaVariablesCount() const;
 
-	/*-----     -----     -----     -----      -----     -----*/
-
-	virtual const unsigned int getInputLinguaVariablesCount() const = 0;
-
-	virtual LinguaVariable const& getInputLinguaVariable(
+	/*virtual*/ LinguaVariable const& getInputLinguaVariable(
 		const unsigned int _index
-	) const = 0;
+	) const;
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	virtual const unsigned int getOutputLinguaVariablesCount() const = 0;
+	/*virtual*/ const unsigned int getOutputLinguaVariablesCount() const;
 
-	virtual LinguaVariable const& getOutputLinguaVariable(
+	/*virtual*/ LinguaVariable const& getOutputLinguaVariable(
 		const unsigned int _index
-	) const = 0;
+	) const;
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	virtual void addInputLinguaVariable( const QString& _name ) = 0;
+	/*virtual*/ void addInputLinguaVariable( const QString& _name );
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	virtual void addOutputLinguaVariable( const QString& _name ) = 0;
+	/*virtual*/ void addOutputLinguaVariable( const QString& _name );
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-}; // class LinguaVariablesDictionary
+private:
+
+	/*-----     -----     -----     -----      -----     -----*/
+
+	typedef
+		std::vector< boost::shared_ptr< const LinguaVariable > >
+		VariablesVector;
+
+	VariablesVector m_inputVariables, m_outputVariables;
+
+	/*-----     -----     -----     -----      -----     -----*/
+
+}; // class LinguaVariablesDictionaryImpl
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
@@ -58,4 +66,4 @@ public:
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
-#endif // _FUZZY_LOGIC_ENGINE__LINGUA_VARIABLES_DICTIONARY_
+#endif // _FUZZY_LOGIC_ENGINE__LINGUA_VARIABLES_DICTIONARY_IMPL_
