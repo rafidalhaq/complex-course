@@ -15,12 +15,12 @@ struct CubeTerm
 
 	enum Enum
 	{
-			H
-		,	C
-		,	B
-		,	K
-		,	L
-		,	M
+			H	= 1
+		,	C	= 2
+		,	B	= 3
+		,	K	= 4
+		,	L	= 5
+		,	M	= 6
 		,	X
 		,	U
 	};

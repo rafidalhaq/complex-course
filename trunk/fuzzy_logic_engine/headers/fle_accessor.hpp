@@ -37,7 +37,9 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	// TODO: here will be the methods to do the production rules analysis
+	virtual bool isCompleteKB( KnowledgeBase const& _knowledgeBase ) const = 0;
+
+	virtual bool isConsistentKB( KnowledgeBase const& _knowledgeBase ) const = 0;
 
 	/*-----     -----     -----     -----      -----     -----*/
 

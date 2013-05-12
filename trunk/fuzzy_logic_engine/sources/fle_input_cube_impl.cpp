@@ -130,7 +130,11 @@ InputCubeImpl::makeNewCube( InputCube const& _other, InputCubeImpl::CubeTermTabl
 
 	InputTermsVector result( getTermsCount() );
 	for( unsigned int i = 0; i < getTermsCount(); ++i )
+	{
 		result[ i ] = _method( getCubeTerm( i ), _other.getCubeTerm( i ) ); 
+		if ( result[ i ] == CubeTerm::U )
+			return std::auto_ptr< const InputCube >();
+	}
 
 	std::auto_ptr< InputCubeImpl > resultCube( new InputCubeImpl );
 	resultCube->swap( result );
