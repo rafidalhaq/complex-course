@@ -37,7 +37,7 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	// attention: _inputs will be cleared after the call!
+	// NOTE: _inputs will be cleared after the call!
 	virtual void addProductionRule(
 			InputTermsVectorNonConstRef _inputs
 		,	OutputTerm::Enum _outTerm

@@ -15,11 +15,13 @@ struct OutputTerm
 
 	enum Enum
 	{
-			OH
-		,	H
-		,	C
-		,	D
-		,	B
+			OH	= 1
+		,	H	= 2
+		,	C	= 3
+		,	D	= 4
+		,	B	= 5
+
+		,	Last
 	};
 
 	/*-----     -----     -----     -----      -----     -----*/
