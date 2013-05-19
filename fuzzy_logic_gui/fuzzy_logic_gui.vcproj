@@ -466,6 +466,40 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<Filter
+			Name="Engine Controller"
+			>
+			<File
+				RelativePath=".\flg_engine_controller.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\flg_engine_controller.hpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description=""
+						CommandLine=""
+						AdditionalDependencies=""
+						Outputs=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description=""
+						CommandLine=""
+						AdditionalDependencies=""
+						Outputs=""
+					/>
+				</FileConfiguration>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\main.cpp"
 			>

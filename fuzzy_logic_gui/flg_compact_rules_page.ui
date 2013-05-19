@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>528</width>
-    <height>327</height>
+    <width>366</width>
+    <height>376</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,80 +19,99 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QWidget" name="verticalLayoutWidget_2">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>501</width>
-     <height>301</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout_3">
-    <property name="sizeConstraint">
-     <enum>QLayout::SetMaximumSize</enum>
-    </property>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <property name="sizeConstraint">
-       <enum>QLayout::SetMaximumSize</enum>
-      </property>
-      <item>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="1">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Output Variable:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QComboBox" name="m_outputCombo"/>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Input Vector:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLineEdit" name="m_inputVector"/>
-        </item>
-        <item row="1" column="2">
-         <widget class="QPushButton" name="m_addButton">
-          <property name="text">
-           <string>Add</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QListWidget" name="m_rulesList"/>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QPushButton" name="pushButton">
-          <property name="text">
-           <string>Extensive form</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_2">
-          <property name="text">
-           <string>Production Rules Analysis</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </item>
-   </layout>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMaximumSize</enum>
+     </property>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetMaximumSize</enum>
+       </property>
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+           <underline>true</underline>
+          </font>
+         </property>
+         <property name="text">
+          <string>Step 2 - Production Rules :</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="2" column="2">
+          <widget class="QPushButton" name="m_addButton">
+           <property name="text">
+            <string>Add</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLineEdit" name="m_inputVector"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Input Vector:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="m_outputCombo"/>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="label_2">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Output Variable:</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QListWidget" name="m_rulesList"/>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QPushButton" name="pushButton">
+           <property name="text">
+            <string>Extensive form</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_2">
+           <property name="text">
+            <string>Analysis</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

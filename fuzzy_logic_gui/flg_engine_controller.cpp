@@ -1,69 +1,82 @@
-#ifndef __FUZZY_LOGIC_GUI_PROJECT_SETUP_PAGE_HPP__
-#define __FUZZY_LOGIC_GUI_PROJECT_SETUP_PAGE_HPP__
 
-#include <QtGui/QMainWindow>
-#include "ui_flg_project_setup_page.h"
+#include "flg_engine_controller.hpp"
 
 /*------------------------------------------------------------------------------*/
 
 namespace FuzzyLogic{
 namespace Gui{
-namespace Pages{
 
 /*------------------------------------------------------------------------------*/
 
-class ProjectSetup
-	:	public QWidget
+
+EngineController::EngineController()
+{}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+EngineController::~EngineController()
+{}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+int
+EngineController::getInputVariablesCount()
+{return 4;}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+int
+EngineController::getOutputVariablesCount()
+{return 1;}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+void
+EngineController::addRule(const QString & input, const QString & _output)
+{}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+void
+EngineController::makeFullRulesForm( QStringList & _destination )
 {
-	Q_OBJECT
-
-/*------------------------------------------------------------------------------*/
-
-public:
-
-/*------------------------------------------------------------------------------*/
-
-	ProjectSetup(QWidget *parent = 0);
-
-	~ProjectSetup();
-
-/*------------------------------------------------------------------------------*/
-
-public:
-
-/*------------------------------------------------------------------------------*/
-
-	QObject * getNextButton( );
+	_destination.insert("Some Full Rule");
+	_destination.insert("Some Full Rule2");
+	_destination.insert("Some Full Rule3");
+}
 
 
 /*------------------------------------------------------------------------------*/
 
-public slots:
+
+void EngineController::addInputVariable( const QString & _name )
+{
+
+}
+
 
 /*------------------------------------------------------------------------------*/
 
-	void onItemDoubleClicked ( QListWidgetItem * item );
 
-	void onAddButton();
+void EngineController::addOutpuVariable( const QString & _name )
+{
 
-/*------------------------------------------------------------------------------*/
+}
 
-private:
-
-/*------------------------------------------------------------------------------*/
-
-	Ui::ProjectSetupUi m_ui;
 
 /*------------------------------------------------------------------------------*/
 
-};
-
-/*------------------------------------------------------------------------------*/
-
-} // namespace Pages
 } // namespace Gui
 } // namespace FuzzyLogic
 
 /*------------------------------------------------------------------------------*/
-
-#endif // __FUZZY_LOGIC_GUI_PROJECT_SETUP_PAGE_HPP__

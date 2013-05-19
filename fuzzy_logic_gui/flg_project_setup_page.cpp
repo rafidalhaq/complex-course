@@ -14,13 +14,14 @@ ProjectSetup::ProjectSetup(QWidget *parent)
 {
 	m_ui.setupUi(this);
 
-	connect(m_ui.m_inputVariablesList, SIGNAL(customContextMenuRequested(const QPoint&)),
-	 this, SLOT(showContextMenu(const QPoint&)));
-	connect(m_ui.m_inputVariablesList, SIGNAL(itemDoubleClicked ( QListWidgetItem * )),
-	 this, SLOT(onItemDoubleClicked(QListWidgetItem*)));
+	m_ui.m_typeCombo->addItem("input");
+	m_ui.m_typeCombo->addItem("output");
+
 	connect(m_ui.m_inputVariablesList, SIGNAL(itemDoubleClicked ( QListWidgetItem * )),
 	 this, SLOT(onItemDoubleClicked(QListWidgetItem*)));
 
+	connect(m_ui.m_addButton, SIGNAL(clicked()),
+	 this, SLOT(onAddButton()));
 }
 
 
@@ -47,19 +48,14 @@ ProjectSetup::getNextButton()
 
 
 void
-ProjectSetup::showContextMenu(const QPoint& pos) // this is a slot
+ProjectSetup::onItemDoubleClicked(QListWidgetItem * _item)
 {
-    QPoint globalPos =
-		m_ui.m_inputVariablesList->viewport()->mapToGlobal(pos);
-   
-    QMenu contextMenu;
-	contextMenu.addAction(QString("Add"));
+	QListWidgetItem* targetItem =	
+		m_ui.m_inputVariablesList->takeItem(
+			m_ui.m_inputVariablesList->row(_item));
 
-    QAction* selectedItem = contextMenu.exec(globalPos);
-    if (selectedItem)
-    {
-		m_ui.m_inputVariablesList->addItem("variable_name");
-    }
+	delete targetItem;
+
 }
 
 
@@ -67,13 +63,13 @@ ProjectSetup::showContextMenu(const QPoint& pos) // this is a slot
 
 
 void
-ProjectSetup::onItemDoubleClicked(QListWidgetItem * _item)
+ProjectSetup::onAddButton()
 {
-	_item->setFlags(_item->flags() | Qt::ItemIsEditable);
-
-	m_ui.m_inputVariablesList->editItem(_item);
-
-	_item->setFlags(_item->flags() & ~Qt::ItemIsEditable);
+	m_ui.m_inputVariablesList->addItem(
+			m_ui.m_typeCombo->currentText()
+		+	" - "
+		+	m_ui.m_variableName->text()
+	);
 
 }
 

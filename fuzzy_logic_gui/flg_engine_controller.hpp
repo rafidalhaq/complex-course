@@ -1,21 +1,26 @@
-#ifndef __FUZZY_LOGIC_GUI_PROJECT_SETUP_PAGE_HPP__
-#define __FUZZY_LOGIC_GUI_PROJECT_SETUP_PAGE_HPP__
+#ifndef __FUZZY_LOGIC_GUI_MAIN_WINDOW_HPP__
+#define __FUZZY_LOGIC_GUI_MAIN_WINDOW_HPP__
 
-#include <QtGui/QMainWindow>
-#include "ui_flg_project_setup_page.h"
+#include <QtCore/QStringList>
 
 /*------------------------------------------------------------------------------*/
 
 namespace FuzzyLogic{
 namespace Gui{
-namespace Pages{
 
 /*------------------------------------------------------------------------------*/
 
-class ProjectSetup
-	:	public QWidget
+class EngineController
 {
-	Q_OBJECT
+/*------------------------------------------------------------------------------*/
+
+public:
+
+/*------------------------------------------------------------------------------*/
+
+	EngineController();
+
+	~EngineController();
 
 /*------------------------------------------------------------------------------*/
 
@@ -23,36 +28,18 @@ public:
 
 /*------------------------------------------------------------------------------*/
 
-	ProjectSetup(QWidget *parent = 0);
+	void addInputVariable( const QString & _name );
 
-	~ProjectSetup();
+	void addOutpuVariable( const QString & _name );
 
-/*------------------------------------------------------------------------------*/
+	void addRule( const QString & input, const QString & _output );
 
-public:
+	int getInputVariablesCount() const;
 
-/*------------------------------------------------------------------------------*/
+	int getOutputVariablesCount() const;
 
-	QObject * getNextButton( );
+	void makeFullRulesForm( QStringList & _destination );
 
-
-/*------------------------------------------------------------------------------*/
-
-public slots:
-
-/*------------------------------------------------------------------------------*/
-
-	void onItemDoubleClicked ( QListWidgetItem * item );
-
-	void onAddButton();
-
-/*------------------------------------------------------------------------------*/
-
-private:
-
-/*------------------------------------------------------------------------------*/
-
-	Ui::ProjectSetupUi m_ui;
 
 /*------------------------------------------------------------------------------*/
 
@@ -60,10 +47,9 @@ private:
 
 /*------------------------------------------------------------------------------*/
 
-} // namespace Pages
 } // namespace Gui
 } // namespace FuzzyLogic
 
 /*------------------------------------------------------------------------------*/
 
-#endif // __FUZZY_LOGIC_GUI_PROJECT_SETUP_PAGE_HPP__
+#endif // __FUZZY_LOGIC_GUI_MAIN_WINDOW_HPP__
