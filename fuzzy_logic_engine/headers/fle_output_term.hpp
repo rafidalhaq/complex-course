@@ -66,6 +66,13 @@ struct OutputTerm
 
 	/*-----     -----     -----     -----      -----     -----*/
 
+	static Enum next( Enum const _val )
+	{
+		return static_cast< Enum >( _val + 1 );
+	}
+
+	/*-----     -----     -----     -----      -----     -----*/
+
 }; // struct OutputTerm
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/

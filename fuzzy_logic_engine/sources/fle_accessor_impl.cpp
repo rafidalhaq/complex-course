@@ -74,7 +74,7 @@ AccessorImpl::isCompleteKB( KnowledgeBase const& _knowledgeBase ) const
 			if ( !triggeredNonEmptyIntersect )
 				return false;
 		}
-		outTerm = static_cast< OutputTerm::Enum >( outTerm + 1 );
+		outTerm = OutputTerm::next( outTerm );
 	}
 
 	return true;
@@ -89,7 +89,7 @@ AccessorImpl::isConsistentKB( KnowledgeBase const& _knowledgeBase ) const
 {
 	for ( OutputTerm::Enum firstOutTerm = OutputTerm::OH; firstOutTerm != OutputTerm::B; )
 	{
-		for ( OutputTerm::Enum secondOutTerm = OutputTerm::H; secondOutTerm != OutputTerm::Last; )
+		for ( OutputTerm::Enum secondOutTerm = OutputTerm::next( firstOutTerm ); secondOutTerm != OutputTerm::Last; )
 		{
 			for( unsigned int i = 0; i < _knowledgeBase.getProductionRulesCount( firstOutTerm ); ++i )
 			{
@@ -102,9 +102,9 @@ AccessorImpl::isConsistentKB( KnowledgeBase const& _knowledgeBase ) const
 						return false;
 				}
 			}
-			secondOutTerm = static_cast< OutputTerm::Enum >( secondOutTerm + 1 );
+			secondOutTerm = OutputTerm::next( secondOutTerm );
 		}
-		firstOutTerm = static_cast< OutputTerm::Enum >( firstOutTerm + 1 );
+		firstOutTerm = OutputTerm::next( firstOutTerm );
 	}
 
 	return true;
