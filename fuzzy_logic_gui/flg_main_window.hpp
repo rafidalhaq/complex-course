@@ -6,6 +6,7 @@
 
 #include "flg_project_setup_page.hpp"
 #include "flg_compact_rules_page.hpp"
+#include "flg_engine_controller.hpp"
 
 /*------------------------------------------------------------------------------*/
 
@@ -49,6 +50,8 @@ private:
 	Pages::ProjectSetup* m_projectSetupPage;
 
 	Pages::CompactRules* m_compactRulesPage;
+
+	Gui::EngineController m_engine;
 
 /*------------------------------------------------------------------------------*/
 

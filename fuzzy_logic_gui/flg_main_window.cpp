@@ -17,7 +17,6 @@ MainWindow::MainWindow(QApplication* _mainApp)
 	m_ui.setupUi(this);
 
 	m_projectSetupPage = new Pages::ProjectSetup;
-	m_compactRulesPage = new Pages::CompactRules;
 
 	QObject::connect(m_ui.actionNew_Project, SIGNAL(triggered()),
                       this, SLOT(newProject()));
@@ -45,6 +44,12 @@ MainWindow::~MainWindow()
 void
 MainWindow::newProject()
 {
+	setCentralWidget(NULL);
+	m_projectSetupPage = new Pages::ProjectSetup;
+
+	QObject::connect(m_projectSetupPage->getNextButton(), SIGNAL(clicked()),
+		this, SLOT(toCompactFormPage()));
+
 	setCentralWidget(m_projectSetupPage);
 }
 
@@ -54,7 +59,12 @@ MainWindow::newProject()
 void
 MainWindow::toCompactFormPage()
 {
+	m_projectSetupPage->commitChanges(m_engine);
+
+	setCentralWidget(NULL);
+	m_compactRulesPage = new Pages::CompactRules(m_engine);
 	setCentralWidget(m_compactRulesPage);
+
 }
 
 /*------------------------------------------------------------------------------*/

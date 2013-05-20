@@ -3,6 +3,7 @@
 
 #include <QtGui/QMainWindow>
 #include "ui_flg_compact_rules_page.h"
+#include "flg_engine_controller.hpp"
 
 /*------------------------------------------------------------------------------*/
 
@@ -23,7 +24,7 @@ public:
 
 /*------------------------------------------------------------------------------*/
 
-	CompactRules(QWidget *parent = 0);
+	CompactRules(EngineController & _engine, QWidget *parent = 0);
 
 	~CompactRules();
 
@@ -36,6 +37,10 @@ protected slots:
 
 	void onAddPress();
 
+	void onItemDoubleClicked ( QListWidgetItem * item );
+
+	void showExtensiveView();
+
 /*------------------------------------------------------------------------------*/
 
 private:
@@ -45,6 +50,8 @@ private:
 	Ui::CompactRulesUi m_ui;
 
 	QRegExpValidator* m_vectorValidator;
+
+	EngineController & m_engine;
 
 /*------------------------------------------------------------------------------*/
 

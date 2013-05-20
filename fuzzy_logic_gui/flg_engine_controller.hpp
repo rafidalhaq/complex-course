@@ -1,5 +1,5 @@
-#ifndef __FUZZY_LOGIC_GUI_MAIN_WINDOW_HPP__
-#define __FUZZY_LOGIC_GUI_MAIN_WINDOW_HPP__
+#ifndef __FUZZY_LOGIC_GUI_ENGINE_CONTROLLER_HPP__
+#define __FUZZY_LOGIC_GUI_ENGINE_CONTROLLER_HPP__
 
 #include <QtCore/QStringList>
 
@@ -52,4 +52,4 @@ public:
 
 /*------------------------------------------------------------------------------*/
 
-#endif // __FUZZY_LOGIC_GUI_MAIN_WINDOW_HPP__
+#endif // __FUZZY_LOGIC_GUI_ENGINE_CONTROLLER_HPP__
