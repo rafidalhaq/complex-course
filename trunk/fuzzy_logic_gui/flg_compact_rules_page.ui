@@ -92,14 +92,14 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="m_extensiveButton">
            <property name="text">
             <string>Extensive form</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="m_analysisButton">
            <property name="text">
             <string>Analysis</string>
            </property>

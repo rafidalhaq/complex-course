@@ -3,6 +3,7 @@
 
 #include <QtGui/QMainWindow>
 #include "ui_flg_project_setup_page.h"
+#include "flg_engine_controller.hpp"
 
 /*------------------------------------------------------------------------------*/
 
@@ -35,6 +36,7 @@ public:
 
 	QObject * getNextButton( );
 
+	void commitChanges(EngineController & _engine);
 
 /*------------------------------------------------------------------------------*/
 

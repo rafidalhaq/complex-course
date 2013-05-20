@@ -34,9 +34,55 @@ struct CubeTerm
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	static Enum fromShortString( QString const& _str );
+	static Enum fromShortString( QString const& _str )
+	{
+		static QHash< QString, Enum > table;
+		if ( table.empty() )
+		{
+			table[ "H" ] = H;
+			table[ "C" ] = C;
+			table[ "B" ] = B;
+			table[ "K" ] = K;
+			table[ "L" ] = L;
+			table[ "M" ] = M;
+			table[ "X" ] = X;
+			table[ "U" ] = U;
+		}
 
-	static QString toShortString( Enum _enum );
+		if ( !table.contains( _str ) )
+			throw std::exception();
+
+		Enum enumVal = table.value( _str );
+
+		// CHECKME: this whole function is made considering it will be called only on the input values
+		// and the valid inputs aren't all the alphabet
+		if ( !isValidInputTerm( enumVal ) )
+			throw std::exception();
+
+		return enumVal;
+	}
+
+
+	static QString toShortString( Enum _enum )
+	{
+		static QHash< Enum, QString > table;
+		if ( table.empty() )
+		{
+			table[ H ] = "H";
+			table[ C ] = "C";
+			table[ B ] = "B";
+			table[ K ] = "K";
+			table[ L ] = "L";
+			table[ M ] = "M";
+			table[ X ] = "X";
+			table[ U ] = "U";
+		}
+
+		if ( !table.contains( _enum ) )
+			throw std::exception();
+
+		return table.value( _enum );
+	}
 
 	/*-----     -----     -----     -----      -----     -----*/
 
@@ -55,6 +101,7 @@ struct CubeTerm
 	/*-----     -----     -----     -----      -----     -----*/
 
 }; // struct CubeTerm
+
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 

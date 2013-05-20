@@ -54,6 +54,9 @@ ProjectSetup::onItemDoubleClicked(QListWidgetItem * _item)
 		m_ui.m_inputVariablesList->takeItem(
 			m_ui.m_inputVariablesList->row(_item));
 
+	if(_item->text().startsWith( "output"))
+		m_ui.m_typeCombo->addItem("output");
+
 	delete targetItem;
 
 }
@@ -70,6 +73,47 @@ ProjectSetup::onAddButton()
 		+	" - "
 		+	m_ui.m_variableName->text()
 	);
+
+	if(m_ui.m_typeCombo->currentText() == "output")
+		m_ui.m_typeCombo->removeItem(1);
+
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+void
+ProjectSetup::commitChanges(EngineController & _engine)
+{
+	QList<QListWidgetItem*> variables =
+		m_ui.m_inputVariablesList->findItems(
+			"input*"
+		,	Qt::MatchWildcard
+		);
+	QList<QListWidgetItem*>::iterator beginIt = variables.begin();
+	QList<QListWidgetItem*>::iterator endIt = variables.end();
+	while(beginIt!=endIt)
+	{
+		QString text = (*beginIt)->text();
+
+		_engine.addInputVariable(text.section(" - ",1));
+
+		beginIt++;
+	}
+	variables =
+		m_ui.m_inputVariablesList->findItems(
+			"output*"
+		,	Qt::MatchWildcard
+		);
+	beginIt = variables.begin();
+	endIt = variables.end();
+	while(beginIt!=endIt)
+	{
+		QString text = (*beginIt)->text();
+		_engine.addOutpuVariable(text.section(" - ",1));
+		beginIt++;
+	}
 
 }
 
