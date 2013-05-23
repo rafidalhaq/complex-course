@@ -36,7 +36,7 @@ public:
 
 	QObject * getNextButton( );
 
-	void commitChanges(EngineController & _engine);
+	bool commitChanges(EngineController & _engine);
 
 /*------------------------------------------------------------------------------*/
 
@@ -47,6 +47,17 @@ public slots:
 	void onItemDoubleClicked ( QListWidgetItem * item );
 
 	void onAddButton();
+
+
+/*------------------------------------------------------------------------------*/
+
+private:
+
+/*------------------------------------------------------------------------------*/
+
+	void updateNumbers();
+
+	void showError(QString const & _text);
 
 /*------------------------------------------------------------------------------*/
 

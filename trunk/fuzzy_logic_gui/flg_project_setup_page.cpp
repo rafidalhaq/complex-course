@@ -50,12 +50,14 @@ ProjectSetup::getNextButton()
 void
 ProjectSetup::onItemDoubleClicked(QListWidgetItem * _item)
 {
-	QListWidgetItem* targetItem =	
+	QListWidgetItem* targetItem =
 		m_ui.m_inputVariablesList->takeItem(
 			m_ui.m_inputVariablesList->row(_item));
 
-	if(_item->text().startsWith( "output"))
+	if(_item->text().contains( "output - "))
 		m_ui.m_typeCombo->addItem("output");
+
+	updateNumbers();
 
 	delete targetItem;
 
@@ -68,8 +70,12 @@ ProjectSetup::onItemDoubleClicked(QListWidgetItem * _item)
 void
 ProjectSetup::onAddButton()
 {
+	int lineNumber = m_ui.m_inputVariablesList->count();
+
 	m_ui.m_inputVariablesList->addItem(
-			m_ui.m_typeCombo->currentText()
+			QString::number(lineNumber+1)
+		+	". "
+		+	m_ui.m_typeCombo->currentText()
 		+	" - "
 		+	m_ui.m_variableName->text()
 	);
@@ -83,14 +89,22 @@ ProjectSetup::onAddButton()
 /*------------------------------------------------------------------------------*/
 
 
-void
+bool
 ProjectSetup::commitChanges(EngineController & _engine)
 {
+
 	QList<QListWidgetItem*> variables =
 		m_ui.m_inputVariablesList->findItems(
-			"input*"
+			"*input - *"
 		,	Qt::MatchWildcard
 		);
+
+	if(variables.isEmpty())
+	{
+		showError("Add at list one input variable!");
+		return false ;
+	}
+
 	QList<QListWidgetItem*>::iterator beginIt = variables.begin();
 	QList<QListWidgetItem*>::iterator endIt = variables.end();
 	while(beginIt!=endIt)
@@ -103,9 +117,16 @@ ProjectSetup::commitChanges(EngineController & _engine)
 	}
 	variables =
 		m_ui.m_inputVariablesList->findItems(
-			"output*"
+			"*output - *"
 		,	Qt::MatchWildcard
 		);
+
+	if(variables.isEmpty())
+	{
+		showError("Add an output variable!");
+		return false;
+	}
+
 	beginIt = variables.begin();
 	endIt = variables.end();
 	while(beginIt!=endIt)
@@ -115,8 +136,38 @@ ProjectSetup::commitChanges(EngineController & _engine)
 		beginIt++;
 	}
 
+	return true;
+
 }
 
+
+/*------------------------------------------------------------------------------*/
+
+void
+ProjectSetup::updateNumbers()
+{
+	for(int row = 0; row < m_ui.m_inputVariablesList->count(); row++)
+	{
+		QListWidgetItem * item =
+			m_ui.m_inputVariablesList->item(row);
+
+		QString currentText = item->text();
+
+		item->setText(QString::number(row+1)+". "+currentText.section(" ",1) );
+
+	}
+
+
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+void
+ProjectSetup::showError(QString const & _text)
+{
+	QMessageBox::warning(this, "Error", _text);
+}
 
 /*------------------------------------------------------------------------------*/
 

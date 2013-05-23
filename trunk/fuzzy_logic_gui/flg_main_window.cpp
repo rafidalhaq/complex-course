@@ -59,13 +59,29 @@ MainWindow::newProject()
 void
 MainWindow::toCompactFormPage()
 {
-	m_projectSetupPage->commitChanges(m_engine);
+	if(!m_projectSetupPage->commitChanges(m_engine))
+		return;
 
 	setCentralWidget(NULL);
-	m_compactRulesPage = new Pages::CompactRules(m_engine);
+	m_compactRulesPage = new Pages::CompactRules(m_engine,*this);
+
+	QObject::connect(m_compactRulesPage->getAnalysisButton(), SIGNAL(clicked()),
+		this, SLOT(toAnalysisPage()));
+
 	setCentralWidget(m_compactRulesPage);
 
+} // MainWindow::toCompactFormPage
+
+
+/*------------------------------------------------------------------------------*/
+
+
+void
+MainWindow::toAnalysisPage()
+{
+
 }
+
 
 /*------------------------------------------------------------------------------*/
 

@@ -24,10 +24,21 @@ public:
 
 /*------------------------------------------------------------------------------*/
 
-	CompactRules(EngineController & _engine, QWidget *parent = 0);
+	CompactRules(
+			EngineController & _engine
+		,	QMainWindow & _mainWindow
+		,	QWidget *parent = 0
+		);
 
 	~CompactRules();
 
+/*------------------------------------------------------------------------------*/
+
+public:
+
+/*------------------------------------------------------------------------------*/
+
+	QObject * getAnalysisButton();
 
 /*------------------------------------------------------------------------------*/
 
@@ -47,11 +58,25 @@ private:
 
 /*------------------------------------------------------------------------------*/
 
+	void updateNumbers();
+
+/*------------------------------------------------------------------------------*/
+
+private:
+
+/*------------------------------------------------------------------------------*/
+
 	Ui::CompactRulesUi m_ui;
 
 	QRegExpValidator* m_vectorValidator;
 
 	EngineController & m_engine;
+
+	QTextEdit* m_extensiveView;
+
+	QMainWindow & m_mainWindow;
+
+	QDockWidget * m_extensiveDock;
 
 /*------------------------------------------------------------------------------*/
 

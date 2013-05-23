@@ -10,9 +10,16 @@ namespace Pages{
 /*------------------------------------------------------------------------------*/
 
 
-CompactRules::CompactRules(EngineController & _engine, QWidget *parent )
+CompactRules::CompactRules(
+	EngineController & _engine
+,	QMainWindow & _mainWindow
+,	QWidget *parent
+)
 	:	QWidget(parent)
 	,	m_engine(_engine)
+	,	m_mainWindow(_mainWindow)
+	,	m_extensiveView(NULL)
+	,	m_extensiveDock(NULL)
 {
 	m_ui.setupUi(this);
 
@@ -52,13 +59,18 @@ CompactRules::~CompactRules()
 void
 CompactRules::onAddPress()
 {
+	int lineNumber = m_ui.m_rulesList->count();
+
 	m_ui.m_rulesList->addItem(
-			m_ui.m_inputVector->text()
+			QString::number(lineNumber+1)
+		+	". "
+		+	m_ui.m_inputVector->text()
 		+	"->"
 		+	m_ui.m_outputCombo->currentText()
 	);
 
 	m_engine.addRule(m_ui.m_inputVector->text(),m_ui.m_outputCombo->currentText());
+
 
 }
 
@@ -73,6 +85,8 @@ CompactRules::onItemDoubleClicked(QListWidgetItem * _item)
 
 	delete targetItem;
 
+	updateNumbers();
+
 }
 
 /*------------------------------------------------------------------------------*/
@@ -80,21 +94,65 @@ CompactRules::onItemDoubleClicked(QListWidgetItem * _item)
 void
 CompactRules::showExtensiveView()
 {
-	QTextEdit* textView = new QTextEdit;
+	if(!m_extensiveView)
+		m_extensiveView = new QTextEdit;
 
 	QStringList rules;
 
 	m_engine.makeFullRulesForm(rules);
 
-	textView->setText(
+	m_extensiveView->setText(
 		rules.join("\n")
-		);
+	);
 
-	textView->setReadOnly(true);
+	m_extensiveView->setReadOnly(true);
 
-	textView->show();
+	if(m_extensiveDock )
+	{
+		if( m_extensiveDock->isHidden())
+		{
+			m_extensiveView->update();
+			m_extensiveDock->show();
+		}
+		else
+		{
+			return;
+		}
+	}
+	else // no dock was created yet
+	{
+		m_extensiveDock = new QDockWidget(tr("Extencive Form"), this);
+		m_extensiveDock->setAllowedAreas(Qt::LeftDockWidgetArea |
+			Qt::RightDockWidgetArea);
+		m_extensiveDock->setWidget(m_extensiveView);
+
+		m_mainWindow.addDockWidget(Qt::RightDockWidgetArea, m_extensiveDock);
+	}
 }
 
+/*------------------------------------------------------------------------------*/
+
+void
+CompactRules::updateNumbers()
+{
+	for(int row = 0; row < m_ui.m_rulesList->count(); row++)
+	{
+		QListWidgetItem * item =
+			m_ui.m_rulesList->item(row);
+		QString currentText = item->text();
+		item->setText(QString::number(row+1)+". "+currentText.section(" ",1) );
+	}
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+QObject *
+CompactRules::getAnalysisButton()
+{
+	return m_ui.m_analysisButton;
+}
 
 
 /*------------------------------------------------------------------------------*/
