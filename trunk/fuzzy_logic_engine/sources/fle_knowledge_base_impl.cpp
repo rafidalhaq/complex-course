@@ -3,6 +3,8 @@
 #include "fuzzy_logic_engine/sources/fle_knowledge_base_impl.hpp"
 #include "fuzzy_logic_engine/sources/fle_input_cube_impl.hpp"
 
+#include <algorithm>
+
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
 namespace FuzzyLogicEngine
@@ -50,12 +52,49 @@ KnowledgeBaseImpl::getInputCube( OutputTerm::Enum _term, const unsigned int _ind
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
 
-void
+unsigned int
 KnowledgeBaseImpl::addProductionRule( InputTermsVectorNonConstRef _inputs, OutputTerm::Enum _outTerm )
 {
-	std::auto_ptr< InputCubeImpl > newCube( new InputCubeImpl );
-	newCube->swap( _inputs );
-	m_rules.insert( std::make_pair( _outTerm, newCube.release() ) );
+	InputTermsVector inputTerms( _inputs );
+
+	unsigned int insertedCount = 0;
+
+	if ( m_coveredTerms[ _outTerm ].count( inputTerms ) == 0 )
+	{
+		m_coveredTerms[ _outTerm ].insert( inputTerms );
+		++insertedCount;
+	}
+	else
+		return 0;
+
+	while( std::next_permutation( inputTerms.begin(), inputTerms.end() ) )
+	{
+		if ( m_coveredTerms[ _outTerm ].count( inputTerms ) == 0 )
+		{
+			m_coveredTerms[ _outTerm ].insert( inputTerms );
+			++insertedCount;
+		}
+	}
+
+	inputTerms = _inputs;
+
+	while( std::prev_permutation( inputTerms.begin(), inputTerms.end() ) )
+	{
+		if ( m_coveredTerms[ _outTerm ].count( inputTerms ) == 0 )
+		{
+			m_coveredTerms[ _outTerm ].insert( inputTerms );
+			++insertedCount;
+		}
+	}
+
+	if ( insertedCount != 0 )
+	{
+		std::auto_ptr< InputCubeImpl > newCube( new InputCubeImpl );
+		newCube->swap( _inputs );
+		m_rules.insert( std::make_pair( _outTerm, newCube.release() ) );
+	}
+
+	return insertedCount;
 }
 
 

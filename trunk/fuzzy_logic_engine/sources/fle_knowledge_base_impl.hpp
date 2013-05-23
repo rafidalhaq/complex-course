@@ -31,7 +31,7 @@ public:
 	/*-----     -----     -----     -----      -----     -----*/
 
 	// attention: _inputs will be cleared after the call!
-	/*virtual*/ void addProductionRule(
+	/*virtual*/ unsigned int addProductionRule(
 			InputTermsVectorNonConstRef _inputs
 		,	OutputTerm::Enum _outTerm
 	);
@@ -65,6 +65,14 @@ private:
 		ProductionRulesMap;
 
 	ProductionRulesMap m_rules;
+
+	/*-----     -----     -----     -----      -----     -----*/
+
+	typedef
+		std::map< OutputTerm::Enum, std::set< InputTermsVector > >
+		CoveredTermsMap;
+
+	CoveredTermsMap m_coveredTerms;
 
 	/*-----     -----     -----     -----      -----     -----*/
 
