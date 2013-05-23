@@ -59,7 +59,7 @@ LinguaVariablesDictionaryImpl::addInputLinguaVariable( const QString& _name )
 		new InputLinguaVariableImpl( _name )
 	);
 
-	return m_inputVariables.push_back( newVar );
+	m_inputVariables.push_back( newVar );
 }
 
 
@@ -73,7 +73,38 @@ LinguaVariablesDictionaryImpl::addOutputLinguaVariable( const QString& _name )
 		new OutputLinguaVariableImpl( _name )
 	);
 
-	return m_outputVariables.push_back( newVar );
+	m_outputVariables.push_back( newVar );
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+void
+LinguaVariablesDictionaryImpl::removeInputVariable( const unsigned int _index )
+{
+	m_inputVariables.erase( m_inputVariables.begin() + _index - 1 );
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+void
+LinguaVariablesDictionaryImpl::removeOutputVariable( const unsigned int _index )
+{
+	m_outputVariables.erase( m_outputVariables.begin() + _index - 1 );
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+void
+LinguaVariablesDictionaryImpl::clear()
+{
+	m_inputVariables.clear();
+	m_outputVariables.clear();
 }
 
 

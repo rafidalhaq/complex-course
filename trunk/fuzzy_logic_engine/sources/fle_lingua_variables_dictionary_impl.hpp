@@ -40,9 +40,15 @@ public:
 
 	/*virtual*/ void addInputLinguaVariable( const QString& _name );
 
+	/*virtual*/ void addOutputLinguaVariable( const QString& _name );
+
 	/*-----     -----     -----     -----      -----     -----*/
 
-	/*virtual*/ void addOutputLinguaVariable( const QString& _name );
+	/*virtual*/ void removeInputVariable( const unsigned int _index );
+
+	/*virtual*/ void removeOutputVariable( const unsigned int _index );
+
+	/*virtual*/ void clear();
 
 	/*-----     -----     -----     -----      -----     -----*/
 

@@ -38,6 +38,12 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
+	/*virtual*/ void removeProductionRule( OutputTerm::Enum _term, const unsigned int _index );
+
+	/*virtual*/ void clear();
+
+	/*-----     -----     -----     -----      -----     -----*/
+
 	/*virtual*/ const unsigned int calculateConjunctionsCount() const;
 
 	/*virtual*/ const unsigned int calculateConjunctionsCount( OutputTerm::Enum _term ) const;
