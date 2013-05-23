@@ -39,6 +39,8 @@ public slots:
 
 	void toCompactFormPage();
 
+	void toAnalysisPage();
+
 /*------------------------------------------------------------------------------*/
 
 private:
@@ -52,6 +54,8 @@ private:
 	Pages::CompactRules* m_compactRulesPage;
 
 	Gui::EngineController m_engine;
+
+	QWidget * m_centralWidget;
 
 /*------------------------------------------------------------------------------*/
 

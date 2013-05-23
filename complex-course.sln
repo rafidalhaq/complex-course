@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fuzzy_logic_engine", "fuzzy_logic_engine\fuzzy_logic_engine.vcproj", "{071BFB86-219B-4355-8BB9-047380538A0F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fuzzy_logic_gui", "fuzzy_logic_gui\fuzzy_logic_gui.vcproj", "{0FD7BB70-EE58-4E4B-AF7E-3B2630674EFA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{071BFB86-219B-4355-8BB9-047380538A0F} = {071BFB86-219B-4355-8BB9-047380538A0F}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

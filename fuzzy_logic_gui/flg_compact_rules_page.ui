@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>366</width>
-    <height>376</height>
+    <width>411</width>
+    <height>514</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,8 +20,8 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout_3">
+   <item row="1" column="0">
+    <layout class="QHBoxLayout" name="m_mainLayout">
      <property name="sizeConstraint">
       <enum>QLayout::SetMaximumSize</enum>
      </property>
