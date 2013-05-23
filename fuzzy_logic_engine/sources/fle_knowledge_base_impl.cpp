@@ -40,6 +40,9 @@ KnowledgeBaseImpl::getInputCube( OutputTerm::Enum _term, const unsigned int _ind
 		= m_rules.equal_range( _term );
 	std::advance( rules.first, _index );
 
+	if ( rules.first == m_rules.end() )
+		throw std::exception();
+
 	return * rules.first->second;
 }
 
@@ -53,6 +56,34 @@ KnowledgeBaseImpl::addProductionRule( InputTermsVectorNonConstRef _inputs, Outpu
 	std::auto_ptr< InputCubeImpl > newCube( new InputCubeImpl );
 	newCube->swap( _inputs );
 	m_rules.insert( std::make_pair( _outTerm, newCube.release() ) );
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+void
+KnowledgeBaseImpl::removeProductionRule( OutputTerm::Enum _term, const unsigned int _index )
+{
+	std::pair< ProductionRulesMap::const_iterator, ProductionRulesMap::const_iterator > rules
+		= m_rules.equal_range( _term );
+
+	std::advance( rules.first, _index );
+
+	if ( rules.first == m_rules.end() )
+		throw std::exception();
+
+	m_rules.erase( rules.first );
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+void
+KnowledgeBaseImpl::clear()
+{
+	m_rules.clear();
 }
 
 

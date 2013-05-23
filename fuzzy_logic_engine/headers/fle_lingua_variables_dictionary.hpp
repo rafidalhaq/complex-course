@@ -44,9 +44,15 @@ public:
 
 	virtual void addInputLinguaVariable( const QString& _name ) = 0;
 
+	virtual void addOutputLinguaVariable( const QString& _name ) = 0;
+
 	/*-----     -----     -----     -----      -----     -----*/
 
-	virtual void addOutputLinguaVariable( const QString& _name ) = 0;
+	virtual void removeInputVariable( const unsigned int _index ) = 0;
+
+	virtual void removeOutputVariable( const unsigned int _index ) = 0;
+
+	virtual void clear() = 0;
 
 	/*-----     -----     -----     -----      -----     -----*/
 

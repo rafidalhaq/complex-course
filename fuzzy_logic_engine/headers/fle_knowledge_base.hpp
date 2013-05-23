@@ -45,6 +45,12 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
+	virtual void removeProductionRule( OutputTerm::Enum _term, const unsigned int _index ) = 0;
+
+	virtual void clear() = 0;
+
+	/*-----     -----     -----     -----      -----     -----*/
+
 	virtual const unsigned int calculateConjunctionsCount() const = 0;
 
 	virtual const unsigned int calculateConjunctionsCount( OutputTerm::Enum _term ) const = 0;
