@@ -40,8 +40,11 @@ struct CubeTerm
 		if ( table.empty() )
 		{
 			table[ "H" ] = H;
+			table[ "h" ] = H;
 			table[ "C" ] = C;
+			table[ "c" ] = C;
 			table[ "B" ] = B;
+			table[ "b" ] = B;
 			table[ "K" ] = K;
 			table[ "L" ] = L;
 			table[ "M" ] = M;
