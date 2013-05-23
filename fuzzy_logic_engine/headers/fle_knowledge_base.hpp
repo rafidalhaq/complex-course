@@ -37,8 +37,9 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
+	// returns a number of values covered by the inserted one considering permutations
 	// NOTE: _inputs will be cleared after the call!
-	virtual void addProductionRule(
+	virtual unsigned int addProductionRule(
 			InputTermsVectorNonConstRef _inputs
 		,	OutputTerm::Enum _outTerm
 	) = 0;
