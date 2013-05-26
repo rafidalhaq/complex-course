@@ -47,7 +47,7 @@ EngineController::getOutputVariablesCount() const
 /*------------------------------------------------------------------------------*/
 
 
-void
+unsigned int
 EngineController::addRule(const QString & input, const QString & _output)
 {
 	FuzzyLogicEngine::InputTermsVector inputs;
@@ -56,7 +56,7 @@ EngineController::addRule(const QString & input, const QString & _output)
 		inputs.push_back(FuzzyLogicEngine::CubeTerm::fromShortString(input[currChar]));
 	
 
-	FuzzyLogicEngine::getAccessorModifying()
+	return FuzzyLogicEngine::getAccessorModifying()
 		.getKnowledgeBaseModifying().addProductionRule(
 				inputs
 			,	FuzzyLogicEngine::OutputTerm::fromShortString(_output)
@@ -124,6 +124,47 @@ EngineController::makeFullRulesForm( QStringList & _destination )
 /*------------------------------------------------------------------------------*/
 
 
+void
+EngineController::makeCMRulesForm( QStringList & _destination )
+{
+	using namespace FuzzyLogicEngine;
+
+	m_currentMinimized =
+		getAccessorModifying().getKnowledgeBaseModifying().createCompactAndMinimizedKnowledgeBase();
+
+	for (int outputTerm = OutputTerm::OH; outputTerm<OutputTerm::Last; outputTerm++ )
+	{
+		QString line(
+				OutputTerm::toShortString((OutputTerm::Enum)outputTerm)
+			+	"->{"
+		);
+
+		int rulesCount = m_currentMinimized->getProductionRulesCount((FuzzyLogicEngine::OutputTerm::Enum)outputTerm);
+
+		for (int ruleId = 0; ruleId < rulesCount;ruleId++)
+		{
+			FuzzyLogicEngine::InputCube const & currentCube =
+				m_currentMinimized->getInputCube((FuzzyLogicEngine::OutputTerm::Enum)outputTerm,ruleId);
+
+			for(int variableId = 0; variableId< currentCube.getTermsCount(); variableId++ )
+			{
+				line += FuzzyLogicEngine::CubeTerm::toShortString(
+					currentCube.getCubeTerm(variableId));
+			}
+
+			if(ruleId<rulesCount-1)
+				line+=", ";
+		}
+
+		line+="}";
+		_destination.push_back(line);
+	}
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
 void EngineController::addInputVariable( const QString & _name )
 {
 	FuzzyLogicEngine::getAccessorModifying().getLinguaVariablesDictionaryModifying()
@@ -138,6 +179,60 @@ void EngineController::addOutpuVariable( const QString & _name )
 {
 	FuzzyLogicEngine::getAccessorModifying().getLinguaVariablesDictionaryModifying()
 		.addOutputLinguaVariable(_name);
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+bool
+EngineController::checkForCompleteness()
+{
+	FuzzyLogicEngine::Accessor const & accessor =
+		FuzzyLogicEngine::getAccessor();
+
+	return accessor.isCompleteKB(accessor.getKnowledgeBase());
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+bool
+EngineController::checkForConsistency()
+{	
+	FuzzyLogicEngine::Accessor const & accessor =
+		FuzzyLogicEngine::getAccessor();
+
+	return accessor.isConsistentKB(accessor.getKnowledgeBase());
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+void
+EngineController::removeAllRules( )
+{
+	FuzzyLogicEngine::Accessor & accessor =
+		FuzzyLogicEngine::getAccessorModifying();
+
+	accessor.getKnowledgeBaseModifying().clear();
+
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+void
+EngineController::clearModels()
+{
+	FuzzyLogicEngine::Accessor & accessor =
+		FuzzyLogicEngine::getAccessorModifying();
+
+	accessor.getKnowledgeBaseModifying().clear();
+	accessor.getLinguaVariablesDictionaryModifying().clear();
+
 }
 
 

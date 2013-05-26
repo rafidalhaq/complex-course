@@ -1,7 +1,7 @@
 
 #include "stdafx.h"
 #include "flg_main_window.hpp"
-
+#include "flg_analysis_page.hpp"
 
 /*------------------------------------------------------------------------------*/
 
@@ -65,22 +65,9 @@ MainWindow::toCompactFormPage()
 	setCentralWidget(NULL);
 	m_compactRulesPage = new Pages::CompactRules(m_engine,*this);
 
-	QObject::connect(m_compactRulesPage->getAnalysisButton(), SIGNAL(clicked()),
-		this, SLOT(toAnalysisPage()));
-
 	setCentralWidget(m_compactRulesPage);
 
 } // MainWindow::toCompactFormPage
-
-
-/*------------------------------------------------------------------------------*/
-
-
-void
-MainWindow::toAnalysisPage()
-{
-
-}
 
 
 /*------------------------------------------------------------------------------*/
