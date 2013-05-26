@@ -22,6 +22,11 @@ ProjectSetup::ProjectSetup(QWidget *parent)
 
 	connect(m_ui.m_addButton, SIGNAL(clicked()),
 	 this, SLOT(onAddButton()));
+
+	QString validationRegex("\\w+");
+	m_ui.m_variableName->setValidator(
+		new QRegExpValidator(QRegExp(validationRegex)));
+
 }
 
 
@@ -70,6 +75,12 @@ ProjectSetup::onItemDoubleClicked(QListWidgetItem * _item)
 void
 ProjectSetup::onAddButton()
 {
+	if(m_ui.m_variableName->text().isEmpty())
+	{
+		showError("Input variable name!");
+		return;
+	}
+
 	int lineNumber = m_ui.m_inputVariablesList->count();
 
 	m_ui.m_inputVariablesList->addItem(

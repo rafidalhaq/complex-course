@@ -1,23 +1,22 @@
-#ifndef __FUZZY_LOGIC_GUI_MAIN_WINDOW_HPP__
-#define __FUZZY_LOGIC_GUI_MAIN_WINDOW_HPP__
+#ifndef __FUZZY_LOGIC_GUI_ANALYSIS_PAGE_HPP__
+#define __FUZZY_LOGIC_GUI_ANALYSIS_PAGE_HPP__
 
 #include <QtGui/QMainWindow>
-#include "ui_flg_main_window.h"
 
-#include "flg_project_setup_page.hpp"
-#include "flg_compact_rules_page.hpp"
+#include "ui_flg_analysis_page.h"
 #include "flg_engine_controller.hpp"
 
 /*------------------------------------------------------------------------------*/
 
 namespace FuzzyLogic{
 namespace Gui{
+namespace Pages{
 
 /*------------------------------------------------------------------------------*/
 
-class MainWindow
-	:	public QMainWindow
-{	
+class Analysis
+	:	public QWidget
+{
 	Q_OBJECT
 
 /*------------------------------------------------------------------------------*/
@@ -26,8 +25,17 @@ public:
 
 /*------------------------------------------------------------------------------*/
 
-	MainWindow( QApplication* _mainApp = NULL );
-	~MainWindow();
+	Analysis(EngineController & _engine, QWidget *parent = 0);
+
+	~Analysis();
+
+/*------------------------------------------------------------------------------*/
+
+public:
+
+/*------------------------------------------------------------------------------*/
+
+	void initialize();
 
 /*------------------------------------------------------------------------------*/
 
@@ -35,9 +43,16 @@ public slots:
 
 /*------------------------------------------------------------------------------*/
 
-	void newProject();
+	void completeness();
 
-	void toCompactFormPage();
+	void minimality(){};
+
+	void coherence(){};
+
+	void consistency();
+
+
+	void closeTab(int _index);
 
 /*------------------------------------------------------------------------------*/
 
@@ -45,15 +60,17 @@ private:
 
 /*------------------------------------------------------------------------------*/
 
-	Ui::Form_MainWindow m_ui;
+	void showError(QString const & _text);
 
-	Pages::ProjectSetup* m_projectSetupPage;
+/*------------------------------------------------------------------------------*/
 
-	Pages::CompactRules* m_compactRulesPage;
+private:
 
-	Gui::EngineController m_engine;
+/*------------------------------------------------------------------------------*/
 
-	QWidget * m_centralWidget;
+	Ui::AnalysisUi m_ui;
+
+	EngineController & m_engine;
 
 /*------------------------------------------------------------------------------*/
 
@@ -61,9 +78,10 @@ private:
 
 /*------------------------------------------------------------------------------*/
 
+} // namespace Pages
 } // namespace Gui
 } // namespace FuzzyLogic
 
 /*------------------------------------------------------------------------------*/
 
-#endif // __FUZZY_LOGIC_GUI_MAIN_WINDOW_HPP__
+#endif // __FUZZY_LOGIC_GUI_ANALYSIS_PAGE_HPP__

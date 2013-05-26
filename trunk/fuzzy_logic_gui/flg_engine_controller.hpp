@@ -5,6 +5,11 @@
 
 /*------------------------------------------------------------------------------*/
 
+namespace FuzzyLogicEngine{
+
+	class KnowledgeBase;
+}
+
 namespace FuzzyLogic{
 namespace Gui{
 
@@ -32,7 +37,9 @@ public:
 
 	void addOutpuVariable( const QString & _name );
 
-	void addRule( const QString & input, const QString & _output );
+	unsigned int addRule( const QString & input, const QString & _output );
+
+	void removeAllRules();
 
 	int getInputVariablesCount() const;
 
@@ -40,6 +47,21 @@ public:
 
 	void makeFullRulesForm( QStringList & _destination );
 
+	void makeCMRulesForm( QStringList & _destination );
+
+	bool checkForCompleteness();
+
+	bool checkForConsistency();
+
+	void clearModels();
+
+/*------------------------------------------------------------------------------*/
+
+private:
+
+/*------------------------------------------------------------------------------*/
+
+	boost::shared_ptr<FuzzyLogicEngine::KnowledgeBase> m_currentMinimized;
 
 /*------------------------------------------------------------------------------*/
 

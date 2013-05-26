@@ -4,6 +4,7 @@
 #include <QtGui/QMainWindow>
 #include "ui_flg_compact_rules_page.h"
 #include "flg_engine_controller.hpp"
+#include "flg_analysis_page.hpp"
 
 /*------------------------------------------------------------------------------*/
 
@@ -38,10 +39,6 @@ public:
 
 /*------------------------------------------------------------------------------*/
 
-	QObject * getAnalysisButton();
-
-/*------------------------------------------------------------------------------*/
-
 protected slots:
 
 /*------------------------------------------------------------------------------*/
@@ -52,13 +49,15 @@ protected slots:
 
 	void showExtensiveView();
 
+	void showAnalysisView();
+
 /*------------------------------------------------------------------------------*/
 
 private:
 
 /*------------------------------------------------------------------------------*/
 
-	void updateNumbers();
+	void refillRules();
 
 /*------------------------------------------------------------------------------*/
 
@@ -77,6 +76,11 @@ private:
 	QMainWindow & m_mainWindow;
 
 	QDockWidget * m_extensiveDock;
+
+	QDockWidget * m_analysisDock;
+
+	Analysis * m_analysisView;
+
 
 /*------------------------------------------------------------------------------*/
 
