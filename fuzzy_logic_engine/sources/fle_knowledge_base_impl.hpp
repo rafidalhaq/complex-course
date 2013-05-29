@@ -30,6 +30,10 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
+	/*virtual*/ RulesVector getAllRulesConsideringPermutations() const;
+
+	/*-----     -----     -----     -----      -----     -----*/
+
 	// attention: _inputs will be cleared after the call!
 	/*virtual*/ unsigned int addProductionRule(
 			InputTermsVectorNonConstRef _inputs
@@ -37,8 +41,6 @@ public:
 	);
 
 	/*-----     -----     -----     -----      -----     -----*/
-
-	/*virtual*/ void removeProductionRule( OutputTerm::Enum _term, const unsigned int _index );
 
 	/*virtual*/ void clear();
 

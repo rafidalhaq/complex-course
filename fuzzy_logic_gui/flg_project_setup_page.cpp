@@ -112,7 +112,7 @@ ProjectSetup::commitChanges(EngineController & _engine)
 
 	if(variables.isEmpty())
 	{
-		showError("Add at list one input variable!");
+		showError("Add at least one input variable!");
 		return false ;
 	}
 

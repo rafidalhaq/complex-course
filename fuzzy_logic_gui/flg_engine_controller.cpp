@@ -41,7 +41,10 @@ EngineController::getInputVariablesCount() const
 
 int
 EngineController::getOutputVariablesCount() const
-{return 1;}
+{
+	return FuzzyLogicEngine::getAccessor().getLinguaVariablesDictionary()
+		.getOutputLinguaVariablesCount();
+}
 
 
 /*------------------------------------------------------------------------------*/
@@ -77,45 +80,40 @@ EngineController::makeFullRulesForm( QStringList & _destination )
 	FuzzyLogicEngine::LinguaVariablesDictionary const & lvDict =
 		FuzzyLogicEngine::getAccessor().getLinguaVariablesDictionary();
 
-	for (int outputTerm = FuzzyLogicEngine::OutputTerm::OH; outputTerm<FuzzyLogicEngine::OutputTerm::Last; outputTerm++ )
+	FuzzyLogicEngine::KnowledgeBase::RulesVector rulesVector
+		= kBase.getAllRulesConsideringPermutations();
+
+	for ( unsigned int ruleId = 0; ruleId < rulesVector.size(); ruleId++ )
 	{
-		for (int ruleId = 0; ruleId < kBase.getProductionRulesCount((FuzzyLogicEngine::OutputTerm::Enum)outputTerm);ruleId++)
+		std::pair< FuzzyLogicEngine::InputTermsVector, FuzzyLogicEngine::OutputTerm::Enum > const& currentRule =
+			rulesVector[ ruleId ];
+		FuzzyLogicEngine::InputTermsVector const& currentCube = currentRule.first;
+
+		QString line;
+		line+="If ";
+
+		for(unsigned int variableId = 0; variableId< currentCube.size(); )
 		{
-			FuzzyLogicEngine::InputCube const & currentCube =
-				kBase.getInputCube((FuzzyLogicEngine::OutputTerm::Enum)outputTerm,ruleId);
+			FuzzyLogicEngine::LinguaVariable const& currVar =
+				lvDict.getInputLinguaVariable(variableId);
 
-			QString line;
-			line+="If ";
+			line += currVar.getName();
+			line += " equals ";
 
-			for(int variableId = 0; variableId< currentCube.getTermsCount(); )
-			{
-				FuzzyLogicEngine::LinguaVariable const& currVar =
-					lvDict.getInputLinguaVariable(variableId);
+			line += FuzzyLogicEngine::CubeTerm::toShortString(currentCube[variableId]);
 
-				line += currVar.getName();
-				line += " equals ";
+			variableId++;
 
-				line += FuzzyLogicEngine::CubeTerm::toShortString(
-					currentCube.getCubeTerm(variableId));
-
-				variableId++;
-
-				if(variableId<currentCube.getTermsCount())
-					line+=" and ";
-			}
-
-			line+=" then ";
-			line+=lvDict.getOutputLinguaVariable(0).getName();
-			line+=" equals ";
-			line+= FuzzyLogicEngine::OutputTerm::toShortString(
-				(FuzzyLogicEngine::OutputTerm::Enum)outputTerm);
-
-			_destination.push_back(line);
+			if(variableId<currentCube.size())
+				line+=" and ";
 		}
 
-		
+		line+=" then ";
+		line+=lvDict.getOutputLinguaVariable(0).getName();
+		line+=" equals ";
+		line+= FuzzyLogicEngine::OutputTerm::toShortString( currentRule.second );
 
-		
+		_destination.push_back(line);
 	}
 
 }
@@ -205,6 +203,32 @@ EngineController::checkForConsistency()
 		FuzzyLogicEngine::getAccessor();
 
 	return accessor.isConsistentKB(accessor.getKnowledgeBase());
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+bool
+EngineController::checkForMinimality()
+{	
+	FuzzyLogicEngine::Accessor const & accessor =
+		FuzzyLogicEngine::getAccessor();
+
+	return accessor.isMinimalKB(accessor.getKnowledgeBase());
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+bool
+EngineController::checkForCoherence()
+{	
+	FuzzyLogicEngine::Accessor const & accessor =
+		FuzzyLogicEngine::getAccessor();
+
+	return accessor.isCoherentKB(accessor.getKnowledgeBase());
 }
 
 

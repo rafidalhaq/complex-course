@@ -41,6 +41,10 @@ public:
 
 	virtual bool isConsistentKB( KnowledgeBase const& _knowledgeBase ) const = 0;
 
+	virtual bool isMinimalKB( KnowledgeBase const& _knowledgeBase ) const = 0;
+
+	virtual bool isCoherentKB( KnowledgeBase const& _knowledgeBase ) const = 0;
+
 	/*-----     -----     -----     -----      -----     -----*/
 
 }; // class Accessor

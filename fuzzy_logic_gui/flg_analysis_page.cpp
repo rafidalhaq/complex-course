@@ -21,6 +21,12 @@ Analysis::Analysis(EngineController & _engine , QWidget *parent)
 	connect(m_ui.m_consistButt, SIGNAL(clicked()),
 		this, SLOT(consistency()));
 
+	connect(m_ui.m_minimalButt, SIGNAL(clicked()),
+		this, SLOT(minimality()));
+
+	connect(m_ui.m_coherenButt, SIGNAL(clicked()),
+		this, SLOT(coherence()));
+
 	connect(m_ui.m_resultsTabber, SIGNAL(tabCloseRequested(int)),
 		this, SLOT(closeTab(int)));
 }
@@ -92,6 +98,46 @@ void Analysis::consistency()
 		);
 
 	m_ui.m_resultsTabber->addTab(result,"Consistency");
+
+}
+
+/*------------------------------------------------------------------------------*/
+
+
+void Analysis::minimality()
+{
+	bool isMinimal = m_engine.checkForMinimality();
+
+	QString text(isMinimal ? "minimal.":"not minimal.");
+
+	QTextEdit* result = new QTextEdit;
+
+	result->setText(
+		"Minimality analysis finished. The rules are "
+		+	text
+		);
+
+	m_ui.m_resultsTabber->addTab(result,"Minimality");
+
+}
+
+/*------------------------------------------------------------------------------*/
+
+
+void Analysis::coherence()
+{
+	bool isCoherent = m_engine.checkForCoherence();
+
+	QString text(isCoherent ? "coherent.":"not coherent.");
+
+	QTextEdit* result = new QTextEdit;
+
+	result->setText(
+		"Coherence analysis finished. The rules are "
+		+	text
+		);
+
+	m_ui.m_resultsTabber->addTab(result,"Coherence");
 
 }
 

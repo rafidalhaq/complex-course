@@ -102,27 +102,10 @@ KnowledgeBaseImpl::addProductionRule( InputTermsVectorNonConstRef _inputs, Outpu
 
 
 void
-KnowledgeBaseImpl::removeProductionRule( OutputTerm::Enum _term, const unsigned int _index )
-{
-	std::pair< ProductionRulesMap::const_iterator, ProductionRulesMap::const_iterator > rules
-		= m_rules.equal_range( _term );
-
-	std::advance( rules.first, _index );
-
-	if ( rules.first == m_rules.end() )
-		throw std::exception();
-
-	m_rules.erase( rules.first );
-}
-
-
-/*------      ------      ------      ------      ------      ------      ------      ------*/
-
-
-void
 KnowledgeBaseImpl::clear()
 {
 	m_rules.clear();
+	m_coveredTerms.clear();
 }
 
 
@@ -182,6 +165,34 @@ KnowledgeBaseImpl::createCompactAndMinimizedKnowledgeBase()
 {
 	// TODO
 	return boost::shared_ptr< KnowledgeBase >();
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+KnowledgeBase::RulesVector
+KnowledgeBaseImpl::getAllRulesConsideringPermutations() const
+{
+	KnowledgeBase::RulesVector rulesVector;
+
+	for(
+			CoveredTermsMap::const_iterator outTermsIt = m_coveredTerms.begin()
+		;	outTermsIt != m_coveredTerms.end()
+		;	++outTermsIt
+	)
+	{
+		for (
+				CoveredTermsMap::mapped_type::const_iterator vectorsIt = outTermsIt->second.begin()
+			;	vectorsIt != outTermsIt->second.end()
+			;	++vectorsIt
+		)
+		{
+			rulesVector.push_back( std::make_pair( *vectorsIt, outTermsIt->first ) );
+		}
+	}
+
+	return rulesVector;
 }
 
 

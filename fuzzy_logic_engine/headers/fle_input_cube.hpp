@@ -34,6 +34,8 @@ public:
 
 	virtual const unsigned int getRank() const = 0;
 
+	virtual const unsigned int getUndefinedValuesCount() const = 0;
+
 	/*-----     -----     -----     -----      -----     -----*/
 
 	virtual const unsigned int calculateCodeDistance( InputCube const& _other ) const = 0;

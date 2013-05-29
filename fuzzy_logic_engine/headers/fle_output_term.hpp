@@ -22,6 +22,7 @@ struct OutputTerm
 		,	B	= 5
 
 		,	Last
+		,	Count = 5
 	};
 
 	/*-----     -----     -----     -----      -----     -----*/
