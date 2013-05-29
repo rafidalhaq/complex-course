@@ -33,15 +33,17 @@ InputCubeImpl::getCubeTerm( unsigned int _index ) const
 const unsigned int
 InputCubeImpl::getRank() const
 {
-	struct Predicate
-	{
-		bool operator() ( CubeTerm::Enum _enum )
-		{
-			return _enum == CubeTerm::X;
-		}
-	};
+	return termsCount( CubeTerm::X );
+}
 
-	return std::count_if( m_terms.begin(), m_terms.end(), Predicate() );
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+const unsigned int
+InputCubeImpl::getUndefinedValuesCount() const
+{
+	return termsCount( CubeTerm::U );
 }
 
 
@@ -131,14 +133,35 @@ InputCubeImpl::makeNewCube( InputCube const& _other, InputCubeImpl::CubeTermTabl
 	InputTermsVector result( getTermsCount() );
 	for( unsigned int i = 0; i < getTermsCount(); ++i )
 	{
-		result[ i ] = _method( getCubeTerm( i ), _other.getCubeTerm( i ) ); 
-		if ( result[ i ] == CubeTerm::U )
-			return std::auto_ptr< const InputCube >();
+		result[ i ] = _method( getCubeTerm( i ), _other.getCubeTerm( i ) );
 	}
 
 	std::auto_ptr< InputCubeImpl > resultCube( new InputCubeImpl );
 	resultCube->swap( result );
 	return resultCube;
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+const unsigned int
+InputCubeImpl::termsCount( CubeTerm::Enum _term ) const
+{
+	struct Predicate
+	{
+		Predicate( CubeTerm::Enum _term )
+			:	m_term( _term ) {}
+
+		bool operator() ( CubeTerm::Enum _enum )
+		{
+			return _enum == m_term;
+		}
+
+		CubeTerm::Enum m_term;
+	};
+
+	return std::count_if( m_terms.begin(), m_terms.end(), Predicate( _term ) );
 }
 
 

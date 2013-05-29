@@ -27,6 +27,8 @@ public:
 
 	/*virtual*/ const unsigned int getRank() const;
 
+	/*virtual*/ const unsigned int getUndefinedValuesCount() const;
+
 	/*virtual*/ const unsigned int calculateCodeDistance( InputCube const& _other ) const;
 
 	/*-----     -----     -----     -----      -----     -----*/
@@ -58,6 +60,8 @@ private:
 	/*-----     -----     -----     -----      -----     -----*/
 
 	std::auto_ptr< const InputCube > makeNewCube( InputCube const& _other, CubeTermTableMethod _method ) const;
+
+	const unsigned int termsCount( CubeTerm::Enum _term ) const;
 
 	/*-----     -----     -----     -----      -----     -----*/
 

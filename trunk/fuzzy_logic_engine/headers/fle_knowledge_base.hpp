@@ -37,6 +37,16 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
+	typedef
+		std::vector< std::pair< InputTermsVector, OutputTerm::Enum > >
+		RulesVector;
+
+	// FIXME: returning vector of vectors by value is bad idea.
+	// Maybe, caching and return by ref is better choice
+	virtual RulesVector getAllRulesConsideringPermutations() const = 0;
+
+	/*-----     -----     -----     -----      -----     -----*/
+
 	// returns a number of values covered by the inserted one considering permutations
 	// NOTE: _inputs will be cleared after the call!
 	virtual unsigned int addProductionRule(
@@ -45,8 +55,6 @@ public:
 	) = 0;
 
 	/*-----     -----     -----     -----      -----     -----*/
-
-	virtual void removeProductionRule( OutputTerm::Enum _term, const unsigned int _index ) = 0;
 
 	virtual void clear() = 0;
 

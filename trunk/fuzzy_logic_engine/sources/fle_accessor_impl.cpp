@@ -57,6 +57,8 @@ AccessorImpl::getLinguaVariablesDictionaryModifying()
 bool
 AccessorImpl::isCompleteKB( KnowledgeBase const& _knowledgeBase ) const
 {
+	std::auto_ptr< const InputCube > intersection;
+
 	for ( OutputTerm::Enum outTerm = OutputTerm::OH; outTerm != OutputTerm::Last; )
 	{
 		for( unsigned int i = 0; i < _knowledgeBase.getProductionRulesCount( outTerm ); ++i )
@@ -65,7 +67,8 @@ AccessorImpl::isCompleteKB( KnowledgeBase const& _knowledgeBase ) const
 			bool triggeredNonEmptyIntersect = false;
 			for ( ; generator.isValid(); generator.next() )
 			{
-				if ( generator.getNextCube().intersect( _knowledgeBase.getInputCube( outTerm, i ) ).get() )
+				intersection = generator.getNextCube().intersect( _knowledgeBase.getInputCube( outTerm, i ) );
+				if ( intersection->getUndefinedValuesCount() == 0 )
 				{
 					triggeredNonEmptyIntersect = true;
 					break;
@@ -87,6 +90,8 @@ AccessorImpl::isCompleteKB( KnowledgeBase const& _knowledgeBase ) const
 bool
 AccessorImpl::isConsistentKB( KnowledgeBase const& _knowledgeBase ) const
 {
+	std::auto_ptr< const InputCube > intersection;
+
 	for ( OutputTerm::Enum firstOutTerm = OutputTerm::OH; firstOutTerm != OutputTerm::B; )
 	{
 		for ( OutputTerm::Enum secondOutTerm = OutputTerm::next( firstOutTerm ); secondOutTerm != OutputTerm::Last; )
@@ -95,10 +100,9 @@ AccessorImpl::isConsistentKB( KnowledgeBase const& _knowledgeBase ) const
 			{
 				for( unsigned int j = 0; j < _knowledgeBase.getProductionRulesCount( secondOutTerm ); ++j )
 				{
-					if ( _knowledgeBase.getInputCube( firstOutTerm, i )
-						.intersect( _knowledgeBase.getInputCube( secondOutTerm, j ) )
-						.get()
-					)
+					intersection = _knowledgeBase.getInputCube( firstOutTerm, i )
+						.intersect( _knowledgeBase.getInputCube( secondOutTerm, j ) );
+					if ( intersection->getUndefinedValuesCount() == 0 )
 						return false;
 				}
 			}
@@ -108,6 +112,73 @@ AccessorImpl::isConsistentKB( KnowledgeBase const& _knowledgeBase ) const
 	}
 
 	return true;
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+bool
+AccessorImpl::isMinimalKB( KnowledgeBase const& _knowledgeBase ) const
+{
+	std::auto_ptr< const InputCube > intersection;
+
+	for ( OutputTerm::Enum outTerm = OutputTerm::OH; outTerm != OutputTerm::Last; )
+	{
+		const unsigned int rulesCount = _knowledgeBase.getProductionRulesCount( outTerm );
+		for( unsigned int i = 0; i < rulesCount; ++i )
+		{
+			for( unsigned int j = 0; ( j < rulesCount ) && ( i != j ); ++j )
+			{
+				intersection = _knowledgeBase.getInputCube( outTerm, i ).intersect( _knowledgeBase.getInputCube( outTerm, j ) );
+				if ( intersection->getUndefinedValuesCount() == 0 )
+					return false;
+			}
+		}
+		outTerm = OutputTerm::next( outTerm );
+	}
+
+	return true;
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+bool
+AccessorImpl::isCoherentKB( KnowledgeBase const& _knowledgeBase ) const
+{
+	std::auto_ptr< const InputCube > summ;
+	const unsigned int cubesCount = m_linguaVariablesDictionary.getInputLinguaVariablesCount();
+	std::set< unsigned int > significantVariables;
+
+	for ( OutputTerm::Enum firstOutTerm = OutputTerm::OH; firstOutTerm != OutputTerm::B; )
+	{
+		for ( OutputTerm::Enum secondOutTerm = OutputTerm::next( firstOutTerm ); secondOutTerm != OutputTerm::Last; )
+		{
+			for( unsigned int i = 0; i < _knowledgeBase.getProductionRulesCount( firstOutTerm ); ++i )
+			{
+				for( unsigned int j = 0; j < _knowledgeBase.getProductionRulesCount( secondOutTerm ); ++j )
+				{
+					summ = _knowledgeBase.getInputCube( firstOutTerm, i )
+						.summ( _knowledgeBase.getInputCube( secondOutTerm, j ) );
+					if ( summ->getUndefinedValuesCount() == ( cubesCount - 1 ) )
+					{
+						unsigned int significantVariablePosition = 0;
+						for( ; significantVariablePosition < cubesCount; ++significantVariablePosition )
+							if ( summ->getCubeTerm( significantVariablePosition ) != CubeTerm::U )
+								break;
+						if ( significantVariables.count( significantVariablePosition ) == 0 )
+							significantVariables.insert( significantVariablePosition );
+					}
+				}
+			}
+			secondOutTerm = OutputTerm::next( secondOutTerm );
+		}
+		firstOutTerm = OutputTerm::next( firstOutTerm );
+	}
+
+	return significantVariables.size() == cubesCount;
 }
 
 

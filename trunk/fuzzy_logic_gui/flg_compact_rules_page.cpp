@@ -139,7 +139,7 @@ CompactRules::showExtensiveView()
 	}
 	else // no dock was created yet
 	{
-		m_extensiveDock = new QDockWidget(tr("Extencive Form"), this);
+		m_extensiveDock = new QDockWidget(tr("Extensive Form"), this);
 		m_extensiveDock->setAllowedAreas(Qt::LeftDockWidgetArea |
 			Qt::RightDockWidgetArea);
 		m_extensiveDock->setWidget(m_extensiveView);

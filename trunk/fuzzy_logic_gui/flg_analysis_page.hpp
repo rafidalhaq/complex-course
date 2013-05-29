@@ -45,9 +45,9 @@ public slots:
 
 	void completeness();
 
-	void minimality(){};
+	void minimality();
 
-	void coherence(){};
+	void coherence();
 
 	void consistency();
 

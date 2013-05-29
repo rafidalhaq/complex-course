@@ -53,6 +53,10 @@ public:
 
 	bool checkForConsistency();
 
+	bool checkForMinimality();
+
+	bool checkForCoherence();
+
 	void clearModels();
 
 /*------------------------------------------------------------------------------*/

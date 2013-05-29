@@ -41,6 +41,10 @@ public:
 
 	/*virtual*/ bool isConsistentKB( KnowledgeBase const& _knowledgeBase ) const;
 
+	/*virtual*/ bool isMinimalKB( KnowledgeBase const& _knowledgeBase ) const;
+
+	/*virtual*/ bool isCoherentKB( KnowledgeBase const& _knowledgeBase ) const;
+
 	/*-----     -----     -----     -----      -----     -----*/
 
 private:
