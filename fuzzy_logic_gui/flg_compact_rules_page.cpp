@@ -144,6 +144,8 @@ CompactRules::showExtensiveView()
 			Qt::RightDockWidgetArea);
 		m_extensiveDock->setWidget(m_extensiveView);
 
+		m_extensiveView->setMinimumSize(370,100);
+
 		m_mainWindow.addDockWidget(Qt::RightDockWidgetArea, m_extensiveDock);
 	}
 }
@@ -199,7 +201,6 @@ CompactRules::showAnalysisView()
 		m_analysisDock->setAllowedAreas(Qt::LeftDockWidgetArea |
 			Qt::RightDockWidgetArea);
 		m_analysisDock->setWidget(m_analysisView);
-
 		m_mainWindow.addDockWidget(Qt::LeftDockWidgetArea, m_analysisDock);
 	}
 
