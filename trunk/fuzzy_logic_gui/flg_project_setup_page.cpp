@@ -94,6 +94,8 @@ ProjectSetup::onAddButton()
 	if(m_ui.m_typeCombo->currentText() == "output")
 		m_ui.m_typeCombo->removeItem(1);
 
+	updateNumbers();
+
 }
 
 
@@ -104,47 +106,47 @@ bool
 ProjectSetup::commitChanges(EngineController & _engine)
 {
 
-	QList<QListWidgetItem*> variables =
+	QList<QListWidgetItem*> inputVariables =
 		m_ui.m_inputVariablesList->findItems(
 			"*input - *"
 		,	Qt::MatchWildcard
 		);
 
-	if(variables.isEmpty())
-	{
-		showError("Add at least one input variable!");
-		return false ;
-	}
-
-	QList<QListWidgetItem*>::iterator beginIt = variables.begin();
-	QList<QListWidgetItem*>::iterator endIt = variables.end();
-	while(beginIt!=endIt)
-	{
-		QString text = (*beginIt)->text();
-
-		_engine.addInputVariable(text.section(" - ",1));
-
-		beginIt++;
-	}
-	variables =
+	QList<QListWidgetItem*> outputVariables =
 		m_ui.m_inputVariablesList->findItems(
-			"*output - *"
+		"*output - *"
 		,	Qt::MatchWildcard
 		);
 
-	if(variables.isEmpty())
+	if(inputVariables.isEmpty())
+	{
+		showError("Add at least one input variable!");
+		return false;
+	}
+	if(outputVariables.isEmpty())
 	{
 		showError("Add an output variable!");
 		return false;
 	}
 
-	beginIt = variables.begin();
-	endIt = variables.end();
-	while(beginIt!=endIt)
+	QList<QListWidgetItem*>::iterator ibeginIt = inputVariables.begin();
+	QList<QListWidgetItem*>::iterator iendIt = inputVariables.end();
+	while(ibeginIt!=iendIt)
 	{
-		QString text = (*beginIt)->text();
+		QString text = (*ibeginIt)->text();
+
+		_engine.addInputVariable(text.section(" - ",1));
+
+		ibeginIt++;
+	}
+
+	QList<QListWidgetItem*>::iterator obeginIt = outputVariables.begin();
+	QList<QListWidgetItem*>::iterator oendIt = outputVariables.end();
+	while(obeginIt!=oendIt)
+	{
+		QString text = (*obeginIt)->text();
 		_engine.addOutpuVariable(text.section(" - ",1));
-		beginIt++;
+		obeginIt++;
 	}
 
 	return true;
@@ -165,8 +167,19 @@ ProjectSetup::updateNumbers()
 		QString currentText = item->text();
 
 		item->setText(QString::number(row+1)+". "+currentText.section(" ",1) );
-
 	}
+
+	QList<QListWidgetItem*> variables =
+		m_ui.m_inputVariablesList->findItems(
+		"*input - *"
+		,	Qt::MatchWildcard
+		);
+
+	QString text = m_ui.m_rulesCountLabel->text();
+
+	int rulesCount = pow(3,(long double)variables.size());
+
+	m_ui.m_rulesCountLabel->setText(text.section(":",0,0) + ":" + QString::number(rulesCount));
 
 
 }

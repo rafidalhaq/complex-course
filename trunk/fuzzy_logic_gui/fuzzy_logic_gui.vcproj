@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)_$(PlatformName)"
 			IntermediateDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)\$(ProjectName)"
 			ConfigurationType="1"
 			>
@@ -60,7 +60,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="qtmain.lib QtCore4.lib QtGui4.lib fuzzy_logic_engine.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
-				AdditionalLibraryDirectories="$(QTDIR)\lib"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 			/>
