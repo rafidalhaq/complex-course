@@ -32,19 +32,23 @@ public:
 
 	bool isValid() const;
 
+	void reset();
+
 	/*-----     -----     -----     -----      -----     -----*/
 
 private:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
+	void intializeCubesSequence( const unsigned int _cubeLength );
+
+	/*-----     -----     -----     -----      -----     -----*/
+
 	boost::scoped_ptr< InputCube > m_lastCube;
 
-	InputTermsVector m_terms;
+	std::vector< InputTermsVector > m_allCombinations;
 
-	const unsigned int m_cubeLength;
-
-	unsigned int m_currentHoldingValueIndex, m_currentIncrementingValueIndex;
+	unsigned int m_currentCubeIndex;
 
 	/*-----     -----     -----     -----      -----     -----*/
 

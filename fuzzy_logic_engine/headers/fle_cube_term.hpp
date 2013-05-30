@@ -89,6 +89,13 @@ struct CubeTerm
 
 	/*-----     -----     -----     -----      -----     -----*/
 
+	static Enum next( Enum const _val )
+	{
+		return static_cast< Enum >( _val + 1 );
+	}
+
+	/*-----     -----     -----     -----      -----     -----*/
+
 	static Enum concat( Enum _e1, Enum _e2 );
 
 	/*-----     -----     -----     -----      -----     -----*/

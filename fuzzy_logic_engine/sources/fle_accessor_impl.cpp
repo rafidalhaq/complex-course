@@ -6,6 +6,8 @@
 
 #include "fuzzy_logic_engine/sources/fle_all_cubes_generator.hpp"
 
+#include "fuzzy_logic_engine/sources/fle_input_cube_impl.hpp"
+
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
 namespace FuzzyLogicEngine
@@ -59,11 +61,16 @@ AccessorImpl::isCompleteKB( KnowledgeBase const& _knowledgeBase ) const
 {
 	std::auto_ptr< const InputCube > intersection;
 
+	std::vector< InputTermsVector > allGeneratedCubes;
+	InputTermsVector cubes;
+
+	AllCubesGenerator generator( getLinguaVariablesDictionary().getInputLinguaVariablesCount() );
+
 	for ( OutputTerm::Enum outTerm = OutputTerm::OH; outTerm != OutputTerm::Last; )
 	{
 		for( unsigned int i = 0; i < _knowledgeBase.getProductionRulesCount( outTerm ); ++i )
 		{
-			AllCubesGenerator generator( getLinguaVariablesDictionary().getInputLinguaVariablesCount() );
+			generator.reset();
 			bool triggeredNonEmptyIntersect = false;
 			for ( ; generator.isValid(); generator.next() )
 			{

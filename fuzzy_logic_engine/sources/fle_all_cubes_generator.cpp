@@ -4,6 +4,8 @@
 
 #include "fuzzy_logic_engine/sources/fle_input_cube_impl.hpp"
 
+#include <cmath>
+
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
 namespace FuzzyLogicEngine
@@ -13,16 +15,13 @@ namespace FuzzyLogicEngine
 
 
 AllCubesGenerator::AllCubesGenerator( const unsigned int _cubeLength )
-	:	m_cubeLength( _cubeLength )
-	,	m_terms( _cubeLength, CubeTerm::H )
-	,	m_currentHoldingValueIndex( 0 )
-	,	m_currentIncrementingValueIndex( 1 )
+	:	m_lastCube( new InputCubeImpl )
+	,	m_currentCubeIndex( 0 )
 {
-	m_lastCube.reset( new InputCubeImpl );
+	m_allCombinations.reserve( _cubeLength );
 
-	InputTermsVector termsCopy( m_terms );
-	static_cast< InputCubeImpl * >( m_lastCube.get() )->swap( termsCopy );
-
+	intializeCubesSequence( _cubeLength );
+	reset();
 }
 
 
@@ -45,30 +44,13 @@ AllCubesGenerator::getNextCube() const
 void
 AllCubesGenerator::next()
 {
+	++m_currentCubeIndex;
+
 	if ( !isValid() )
 		return;
 
-	// if next value at current idx is not valid - go to next
-	if ( !CubeTerm::isValidInputTerm(
-		static_cast< CubeTerm::Enum >( m_terms[ m_currentIncrementingValueIndex ] + 1 )
-		)
-	)
-		// if that was the last - reset to the next holding one
-		if ( ( m_currentIncrementingValueIndex + 1 ) == m_cubeLength )
-			// if holding value index was the last - mark as finished
-			if ( ( m_currentHoldingValueIndex + 1 ) == m_cubeLength )
-			{
-				m_currentHoldingValueIndex = m_currentIncrementingValueIndex = 0;
-				return;
-			}
-			else
-			{
-				m_currentIncrementingValueIndex = 0;
-				++m_currentHoldingValueIndex;
-			}
-
-	m_terms[ m_currentIncrementingValueIndex ]
-		= static_cast< CubeTerm::Enum >( m_terms[ m_currentIncrementingValueIndex ] + 1 );
+	InputTermsVector termsCopy( m_allCombinations[ m_currentCubeIndex ] );
+	static_cast< InputCubeImpl * >( m_lastCube.get() )->swap( termsCopy );
 }
 
 
@@ -78,8 +60,64 @@ AllCubesGenerator::next()
 bool
 AllCubesGenerator::isValid() const
 {
-	return m_currentHoldingValueIndex == m_currentIncrementingValueIndex;
+	return m_currentCubeIndex < m_allCombinations.size();
 
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+void
+AllCubesGenerator::reset()
+{
+	m_currentCubeIndex = 0;
+
+	InputTermsVector termsCopy( m_allCombinations[ m_currentCubeIndex ] );
+	static_cast< InputCubeImpl * >( m_lastCube.get() )->swap( termsCopy );
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+void
+AllCubesGenerator::intializeCubesSequence( const unsigned int _cubeLength )
+{
+	std::vector< CubeTerm::Enum > alphabet( 3 );
+	alphabet[ 0 ] = CubeTerm::H;
+	alphabet[ 1 ] = CubeTerm::C;
+	alphabet[ 2 ] = CubeTerm::B;
+
+	InputTermsVector currentCombination( _cubeLength, alphabet.front() );
+
+	InputTermsVector::iterator it = currentCombination.begin();
+
+	while ( it != currentCombination.end() )
+	{
+		m_allCombinations.push_back( currentCombination );
+
+		if ( *it != alphabet.back() )
+			*it = CubeTerm::next( *it );
+		else
+		{
+			do 
+			{
+				++it;
+			} while ( ( it != currentCombination.end() ) && ( *it == alphabet.back() ) );
+
+			if ( it == currentCombination.end() )
+				break;
+
+			*it = CubeTerm::next( *it );
+
+			std::fill( currentCombination.begin(), it, alphabet.front() );
+			it = currentCombination.begin();
+		}
+	}
+
+	if ( m_allCombinations.size() != std::pow( (long double)alphabet.size(), (int)_cubeLength ) )
+		throw std::exception();
 }
 
 

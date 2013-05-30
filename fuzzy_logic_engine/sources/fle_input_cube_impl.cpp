@@ -2,6 +2,8 @@
 
 #include "fuzzy_logic_engine/sources/fle_input_cube_impl.hpp"
 
+#include <algorithm>
+
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
 namespace FuzzyLogicEngine
@@ -130,10 +132,13 @@ InputCubeImpl::makeNewCube( InputCube const& _other, InputCubeImpl::CubeTermTabl
 	if ( _other.getTermsCount() != getTermsCount() )
 		throw std::exception();
 
+	InputCubeImpl const& otherImpl = static_cast< InputCubeImpl const& >( _other );
+	InputTermsVector permuttedVector = permuteToGetBestMatching( otherImpl );
+
 	InputTermsVector result( getTermsCount() );
 	for( unsigned int i = 0; i < getTermsCount(); ++i )
 	{
-		result[ i ] = _method( getCubeTerm( i ), _other.getCubeTerm( i ) );
+		result[ i ] = _method( permuttedVector[ i ], otherImpl.m_terms[ i ] );
 	}
 
 	std::auto_ptr< InputCubeImpl > resultCube( new InputCubeImpl );
@@ -162,6 +167,38 @@ InputCubeImpl::termsCount( CubeTerm::Enum _term ) const
 	};
 
 	return std::count_if( m_terms.begin(), m_terms.end(), Predicate( _term ) );
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+InputTermsVector
+InputCubeImpl::permuteToGetBestMatching( InputCubeImpl const& _other ) const
+{
+	InputTermsVector bestVariant( m_terms );
+	unsigned int numberOfMatchingElements = 0;
+	std::sort( bestVariant.begin(), bestVariant.end() );
+
+	InputTermsVector currentVariant( bestVariant );
+	unsigned int currentNumberOfMatchingElements;
+	
+	do
+	{
+		currentNumberOfMatchingElements = 0;
+		for( unsigned int i = 0; i < m_terms.size(); ++i )
+		{
+			if ( currentVariant[ i ] == _other.m_terms[ i ] )
+				++currentNumberOfMatchingElements;
+		}
+		if ( currentNumberOfMatchingElements > numberOfMatchingElements )
+		{
+			bestVariant = currentVariant;
+			numberOfMatchingElements = currentNumberOfMatchingElements;
+		}
+	} while ( std::next_permutation( currentVariant.begin(), currentVariant.end() ) );
+
+	return bestVariant;
 }
 
 
