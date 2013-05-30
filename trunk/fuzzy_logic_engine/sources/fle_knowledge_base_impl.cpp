@@ -59,6 +59,8 @@ KnowledgeBaseImpl::addProductionRule( InputTermsVectorNonConstRef _inputs, Outpu
 
 	unsigned int insertedCount = 0;
 
+	std::sort( inputTerms.begin(), inputTerms.end() );
+
 	if ( m_coveredTerms[ _outTerm ].count( inputTerms ) == 0 )
 	{
 		m_coveredTerms[ _outTerm ].insert( inputTerms );
@@ -68,17 +70,6 @@ KnowledgeBaseImpl::addProductionRule( InputTermsVectorNonConstRef _inputs, Outpu
 		return 0;
 
 	while( std::next_permutation( inputTerms.begin(), inputTerms.end() ) )
-	{
-		if ( m_coveredTerms[ _outTerm ].count( inputTerms ) == 0 )
-		{
-			m_coveredTerms[ _outTerm ].insert( inputTerms );
-			++insertedCount;
-		}
-	}
-
-	inputTerms = _inputs;
-
-	while( std::prev_permutation( inputTerms.begin(), inputTerms.end() ) )
 	{
 		if ( m_coveredTerms[ _outTerm ].count( inputTerms ) == 0 )
 		{

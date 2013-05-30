@@ -49,6 +49,8 @@ public:
 
 	void swap( InputTermsVectorNonConstRef _terms );
 
+	InputTermsVector permuteToGetBestMatching( InputCubeImpl const& _other ) const;
+
 	/*-----     -----     -----     -----      -----     -----*/
 
 private:
