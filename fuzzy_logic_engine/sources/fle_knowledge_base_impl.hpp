@@ -5,6 +5,8 @@
 
 #include "fuzzy_logic_engine/headers/fle_knowledge_base.hpp"
 
+#include "fuzzy_logic_engine/sources/fle_input_cube_impl.hpp"
+
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
 namespace FuzzyLogicEngine
@@ -63,7 +65,7 @@ private:
 	/*-----     -----     -----     -----      -----     -----*/
 
 	typedef
-		std::multimap< OutputTerm::Enum, boost::shared_ptr< const InputCube > >
+		std::multimap< OutputTerm::Enum, boost::shared_ptr< const InputCubeImpl > >
 		ProductionRulesMap;
 
 	ProductionRulesMap m_rules;

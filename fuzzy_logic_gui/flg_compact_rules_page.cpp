@@ -26,7 +26,10 @@ CompactRules::CompactRules(
 	m_ui.setupUi(this);
 
 	connect(m_ui.m_addButton, SIGNAL(clicked()),
-	 this, SLOT(onAddPress()));
+		this, SLOT(onAddPress()));
+
+	connect(m_ui.m_inputVector, SIGNAL(returnPressed()),
+		this, SLOT(onAddPress()));
 
 	connect(m_ui.m_extensiveButton, SIGNAL(clicked()),
 		this, SLOT(showExtensiveView()));
@@ -43,11 +46,11 @@ CompactRules::CompactRules(
 	m_ui.m_outputCombo->addItem("D");
 	m_ui.m_outputCombo->addItem("B");
 
-	QString validationRegex("[HCBhcb]");
+	QString validationRegex("[HCB]");
 	validationRegex+="{";
 	validationRegex+=QString::number(m_engine.getInputVariablesCount());
 	validationRegex+="}";
-	m_vectorValidator = new QRegExpValidator(QRegExp(validationRegex));
+	m_vectorValidator = new UppercaseRegExpValidator(QRegExp(validationRegex));
 
 	m_ui.m_inputVector->setValidator(m_vectorValidator);
 

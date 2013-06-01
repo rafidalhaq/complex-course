@@ -21,7 +21,10 @@ ProjectSetup::ProjectSetup(QWidget *parent)
 	 this, SLOT(onItemDoubleClicked(QListWidgetItem*)));
 
 	connect(m_ui.m_addButton, SIGNAL(clicked()),
-	 this, SLOT(onAddButton()));
+		this, SLOT(onAddButton()));
+
+	connect(m_ui.m_variableName, SIGNAL(returnPressed()),
+		this, SLOT(onAddButton()));
 
 	QString validationRegex("\\w+");
 	m_ui.m_variableName->setValidator(

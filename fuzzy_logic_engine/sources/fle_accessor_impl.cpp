@@ -59,11 +59,6 @@ AccessorImpl::getLinguaVariablesDictionaryModifying()
 bool
 AccessorImpl::isCompleteKB( KnowledgeBase const& _knowledgeBase ) const
 {
-	std::auto_ptr< const InputCube > intersection;
-
-	std::vector< InputTermsVector > allGeneratedCubes;
-	InputTermsVector cubes;
-
 	AllCubesGenerator generator( getLinguaVariablesDictionary().getInputLinguaVariablesCount() );
 
 	for ( OutputTerm::Enum outTerm = OutputTerm::OH; outTerm != OutputTerm::Last; )
@@ -74,8 +69,7 @@ AccessorImpl::isCompleteKB( KnowledgeBase const& _knowledgeBase ) const
 			bool triggeredNonEmptyIntersect = false;
 			for ( ; generator.isValid(); generator.next() )
 			{
-				intersection = generator.getNextCube().intersect( _knowledgeBase.getInputCube( outTerm, i ) );
-				if ( intersection->getUndefinedValuesCount() == 0 )
+				if ( generator.getNextCube().intersect( _knowledgeBase.getInputCube( outTerm, i ) ).get() )
 				{
 					triggeredNonEmptyIntersect = true;
 					break;
@@ -97,8 +91,6 @@ AccessorImpl::isCompleteKB( KnowledgeBase const& _knowledgeBase ) const
 bool
 AccessorImpl::isConsistentKB( KnowledgeBase const& _knowledgeBase ) const
 {
-	std::auto_ptr< const InputCube > intersection;
-
 	for ( OutputTerm::Enum firstOutTerm = OutputTerm::OH; firstOutTerm != OutputTerm::B; )
 	{
 		for ( OutputTerm::Enum secondOutTerm = OutputTerm::next( firstOutTerm ); secondOutTerm != OutputTerm::Last; )
@@ -107,9 +99,9 @@ AccessorImpl::isConsistentKB( KnowledgeBase const& _knowledgeBase ) const
 			{
 				for( unsigned int j = 0; j < _knowledgeBase.getProductionRulesCount( secondOutTerm ); ++j )
 				{
-					intersection = _knowledgeBase.getInputCube( firstOutTerm, i )
-						.intersect( _knowledgeBase.getInputCube( secondOutTerm, j ) );
-					if ( intersection->getUndefinedValuesCount() == 0 )
+					if ( _knowledgeBase.getInputCube( firstOutTerm, i )
+						.intersect( _knowledgeBase.getInputCube( secondOutTerm, j ) ).get()
+					)
 						return false;
 				}
 			}
@@ -128,8 +120,6 @@ AccessorImpl::isConsistentKB( KnowledgeBase const& _knowledgeBase ) const
 bool
 AccessorImpl::isMinimalKB( KnowledgeBase const& _knowledgeBase ) const
 {
-	std::auto_ptr< const InputCube > intersection;
-
 	for ( OutputTerm::Enum outTerm = OutputTerm::OH; outTerm != OutputTerm::Last; )
 	{
 		const unsigned int rulesCount = _knowledgeBase.getProductionRulesCount( outTerm );
@@ -137,8 +127,7 @@ AccessorImpl::isMinimalKB( KnowledgeBase const& _knowledgeBase ) const
 		{
 			for( unsigned int j = 0; ( j < rulesCount ) && ( i != j ); ++j )
 			{
-				intersection = _knowledgeBase.getInputCube( outTerm, i ).intersect( _knowledgeBase.getInputCube( outTerm, j ) );
-				if ( intersection->getUndefinedValuesCount() == 0 )
+				if ( _knowledgeBase.getInputCube( outTerm, i ).intersect( _knowledgeBase.getInputCube( outTerm, j ) ).get() )
 					return false;
 			}
 		}
