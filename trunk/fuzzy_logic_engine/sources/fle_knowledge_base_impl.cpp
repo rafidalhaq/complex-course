@@ -1,7 +1,6 @@
 #include "ph/fle_ph.hpp"
 
 #include "fuzzy_logic_engine/sources/fle_knowledge_base_impl.hpp"
-#include "fuzzy_logic_engine/sources/fle_input_cube_impl.hpp"
 
 #include <algorithm>
 
@@ -154,8 +153,53 @@ KnowledgeBaseImpl::calculateConditionsCount() const
 boost::shared_ptr< KnowledgeBase >
 KnowledgeBaseImpl::createCompactAndMinimizedKnowledgeBase()
 {
-	// TODO
-	return boost::shared_ptr< KnowledgeBase >();
+	boost::shared_ptr< KnowledgeBaseImpl > minimizedKB( new KnowledgeBaseImpl );
+
+	for ( OutputTerm::Enum outTerm = OutputTerm::OH; outTerm != OutputTerm::Last; )
+	{
+		{
+			std::pair< ProductionRulesMap::const_iterator, ProductionRulesMap::const_iterator > rules
+				= m_rules.equal_range( outTerm );
+			for( ProductionRulesMap::const_iterator it = rules.first; it != rules.second; ++it )
+				minimizedKB->m_rules.insert( std::make_pair( outTerm, it->second->clone().release() ) );
+		}
+
+		std::pair< ProductionRulesMap::iterator, ProductionRulesMap::iterator > rules
+			= minimizedKB->m_rules.equal_range( outTerm );
+		ProductionRulesMap::iterator it1 = rules.first, it2 = rules.first;
+		std::auto_ptr< const InputCube > cube;
+		bool triggeredReplacement = false;
+		while( it1 != rules.second )
+		{
+			for( ; it2 != rules.second; ++it2 )
+			{
+				if ( it1 == it2 )
+					continue;
+				cube = it1->second->bond( * it2->second );
+				if( cube.get() )
+				{
+					minimizedKB->m_rules.erase( it1 );
+					minimizedKB->m_rules.erase( it2 );
+					minimizedKB->m_rules.insert(
+						std::make_pair( outTerm, static_cast< const InputCubeImpl * >( cube.release() ) )
+					);
+					rules = minimizedKB->m_rules.equal_range( outTerm );
+					it1 = rules.first;
+					it2 = rules.first;
+					triggeredReplacement = true;
+					break;
+				}
+			}
+			if ( !triggeredReplacement )
+				++it1;
+			else
+				triggeredReplacement = false;
+		}
+
+		outTerm = OutputTerm::next( outTerm );
+	}
+
+	return minimizedKB;
 }
 
 

@@ -58,10 +58,9 @@ InputCubeImpl::calculateCodeDistance( InputCube const& _other ) const
 	if ( _other.getTermsCount() != getTermsCount() )
 		throw std::exception();
 
+	InputCubeImpl const& otherImpl = static_cast< InputCubeImpl const& >( _other );
 	unsigned int result = 0;
-	for( unsigned int i = 0; i < getTermsCount(); ++i )
-		if ( getCubeTerm( i ) != _other.getCubeTerm( i ) )
-			++ result;
+	permuteToGetBestMatching( otherImpl, &result );
 
 	return result;
 }
@@ -83,7 +82,7 @@ InputCubeImpl::swap( InputTermsVectorNonConstRef _terms )
 std::auto_ptr< const InputCube >
 InputCubeImpl::intersect( InputCube const& _other ) const
 {
-	return makeNewCube( _other, &CubeTerm::intersection );
+	return makeNewCube( _other, &CubeTerm::intersection, true );
 }
 
 
@@ -93,7 +92,7 @@ InputCubeImpl::intersect( InputCube const& _other ) const
 std::auto_ptr< const InputCube >
 InputCubeImpl::join( InputCube const& _other ) const
 {
-	return makeNewCube( _other, &CubeTerm::conjunction );
+	return makeNewCube( _other, &CubeTerm::conjunction, false );
 }
 
 
@@ -119,7 +118,7 @@ InputCubeImpl::complement() const
 std::auto_ptr< const InputCube >
 InputCubeImpl::summ( InputCube const& _other ) const
 {
-	return makeNewCube( _other, &CubeTerm::summation );
+	return makeNewCube( _other, &CubeTerm::summation, false );
 }
 
 
@@ -127,7 +126,11 @@ InputCubeImpl::summ( InputCube const& _other ) const
 
 
 std::auto_ptr< const InputCube >
-InputCubeImpl::makeNewCube( InputCube const& _other, InputCubeImpl::CubeTermTableMethod _method ) const
+InputCubeImpl::makeNewCube(
+		InputCube const& _other
+	,	InputCubeImpl::CubeTermTableMethod _method
+	,	bool _returnNullIfTriggeredEmptyCube
+) const
 {
 	if ( _other.getTermsCount() != getTermsCount() )
 		throw std::exception();
@@ -139,6 +142,8 @@ InputCubeImpl::makeNewCube( InputCube const& _other, InputCubeImpl::CubeTermTabl
 	for( unsigned int i = 0; i < getTermsCount(); ++i )
 	{
 		result[ i ] = _method( permuttedVector[ i ], otherImpl.m_terms[ i ] );
+		if ( result[ i ] == CubeTerm::U && _returnNullIfTriggeredEmptyCube )
+			return std::auto_ptr< const InputCube >();
 	}
 
 	std::auto_ptr< InputCubeImpl > resultCube( new InputCubeImpl );
@@ -174,7 +179,10 @@ InputCubeImpl::termsCount( CubeTerm::Enum _term ) const
 
 
 InputTermsVector
-InputCubeImpl::permuteToGetBestMatching( InputCubeImpl const& _other ) const
+InputCubeImpl::permuteToGetBestMatching(
+		InputCubeImpl const& _other
+	,	unsigned int * _numberOfMatchingElements
+) const
 {
 	InputTermsVector bestVariant( m_terms );
 	unsigned int numberOfMatchingElements = 0;
@@ -198,7 +206,52 @@ InputCubeImpl::permuteToGetBestMatching( InputCubeImpl const& _other ) const
 		}
 	} while ( std::next_permutation( currentVariant.begin(), currentVariant.end() ) );
 
+	if ( _numberOfMatchingElements )
+		*_numberOfMatchingElements = numberOfMatchingElements;
+
 	return bestVariant;
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+std::auto_ptr< const InputCube >
+InputCubeImpl::bond( InputCube const& _other ) const
+{
+	if ( _other.getTermsCount() != getTermsCount() )
+		throw std::exception();
+
+	InputCubeImpl const& otherImpl = static_cast< InputCubeImpl const& >( _other );
+	unsigned int equalTermsCount = 0;
+	InputTermsVector permuttedVector = permuteToGetBestMatching( otherImpl, &equalTermsCount );
+
+	if ( equalTermsCount != ( getTermsCount() - 1 ) )
+		return std::auto_ptr< const InputCube >();
+
+	InputTermsVector result( getTermsCount() );
+	for( unsigned int i = 0; i < getTermsCount(); ++i )
+	{
+		result[ i ] = CubeTerm::conjunction( permuttedVector[ i ], otherImpl.m_terms[ i ] );
+	}
+
+	std::auto_ptr< InputCubeImpl > resultCube( new InputCubeImpl );
+	resultCube->swap( result );
+	return resultCube;
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+std::auto_ptr< const InputCubeImpl >
+InputCubeImpl::clone() const
+{
+	InputCubeImpl * newCube = new InputCubeImpl;
+	newCube->m_terms.resize( m_terms.size() );
+	std::copy( m_terms.begin(), m_terms.end(), newCube->m_terms.begin() );
+
+	return std::auto_ptr< const InputCubeImpl >( newCube );
 }
 
 

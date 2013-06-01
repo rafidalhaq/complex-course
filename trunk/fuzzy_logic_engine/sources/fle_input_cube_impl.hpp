@@ -43,13 +43,20 @@ public:
 
 	/*virtual*/ std::auto_ptr< const InputCube > summ( InputCube const& _other ) const;
 
-	// TODO: should be added 'absorbs' and 'bonds'?
+	/*virtual*/ std::auto_ptr< const InputCube > bond( InputCube const& _other ) const;
+
+	// TODO: should be added 'absorbs'?
 
 	/*-----     -----     -----     -----      -----     -----*/
 
+	std::auto_ptr< const InputCubeImpl > clone() const;
+
 	void swap( InputTermsVectorNonConstRef _terms );
 
-	InputTermsVector permuteToGetBestMatching( InputCubeImpl const& _other ) const;
+	InputTermsVector permuteToGetBestMatching(
+			InputCubeImpl const& _other
+		,	unsigned int * _numberOfMatchingElements = NULL
+	) const;
 
 	/*-----     -----     -----     -----      -----     -----*/
 
@@ -61,7 +68,11 @@ private:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	std::auto_ptr< const InputCube > makeNewCube( InputCube const& _other, CubeTermTableMethod _method ) const;
+	std::auto_ptr< const InputCube > makeNewCube(
+			InputCube const& _other
+		,	CubeTermTableMethod _method
+		,	bool _returnNullIfTriggeredEmptyCube
+	) const;
 
 	const unsigned int termsCount( CubeTerm::Enum _term ) const;
 

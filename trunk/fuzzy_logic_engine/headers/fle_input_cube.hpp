@@ -52,7 +52,9 @@ public:
 
 	virtual std::auto_ptr< const InputCube > summ( InputCube const& _other ) const = 0;
 
-	// TODO: should be added 'absorbs' and 'bonds'?
+	virtual std::auto_ptr< const InputCube > bond( InputCube const& _other ) const = 0;
+
+	// TODO: should be added 'absorbs'?
 
 	/*-----     -----     -----     -----      -----     -----*/
 

@@ -50,7 +50,7 @@ Analysis::initialize()
 
 	QStringList rules;
 
-	//m_engine.makeCMRulesForm(rules); uncomment when Engine has the compact and minimized form
+	m_engine.makeCMRulesForm(rules);
 
 	for (int i = 0;i<rules.size(); i++)
 	{
@@ -67,14 +67,12 @@ void Analysis::completeness()
 {
 	bool isComplete = m_engine.checkForCompleteness();
 
-	QString text(isComplete?"complete.":"not complete.");
+	QString text("Completeness analysis finished. The rules are ");
+	text += isComplete ? "complete." : "not complete.";
 
 	QTextEdit* result = new QTextEdit;
 
-	result->setText(
-			"Completeness analysis finished. The rules are "
-		+	text
-	);
+	result->setText( text );
 
 	m_ui.m_resultsTabber->addTab(result,"Completeness");
 

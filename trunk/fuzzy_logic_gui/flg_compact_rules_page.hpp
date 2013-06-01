@@ -14,6 +14,27 @@ namespace Pages{
 
 /*------------------------------------------------------------------------------*/
 
+class UppercaseRegExpValidator
+	:	public QRegExpValidator
+{
+	Q_OBJECT
+
+public:
+
+	UppercaseRegExpValidator( const QRegExp & _rx )
+		:	QRegExpValidator(_rx)
+	{}
+
+	/*virtual*/ QValidator::State validate ( QString & input, int & pos ) const
+	{
+		input = input.toUpper();
+		return QRegExpValidator::validate( input, pos );
+	}
+
+};
+
+/*------------------------------------------------------------------------------*/
+
 class CompactRules
 	:	public QWidget
 {
