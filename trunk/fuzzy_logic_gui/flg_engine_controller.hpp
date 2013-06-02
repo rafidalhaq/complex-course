@@ -3,6 +3,8 @@
 
 #include <QtCore/QStringList>
 
+#include "fuzzy_logic_engine/headers/fle_checks_listener.hpp"
+
 /*------------------------------------------------------------------------------*/
 
 namespace FuzzyLogic{
@@ -11,7 +13,9 @@ namespace Gui{
 /*------------------------------------------------------------------------------*/
 
 class EngineController
+	:	private FuzzyLogicEngine::ChecksListener
 {
+
 /*------------------------------------------------------------------------------*/
 
 public:
@@ -44,11 +48,11 @@ public:
 
 	void makeCMRulesForm( QStringList & _destination );
 
-	bool checkForCompleteness();
+	bool checkForCompleteness( QString & _detailed );
 
-	bool checkForConsistency();
+	bool checkForConsistency( QString & _detailed );
 
-	bool checkForMinimality();
+	bool checkForMinimality( QString & _detailed );
 
 	bool checkForCoherence();
 
@@ -57,6 +61,34 @@ public:
 /*------------------------------------------------------------------------------*/
 
 private:
+
+/*------------------------------------------------------------------------------*/
+
+	/*virtual*/ void onUncoveredCube( FuzzyLogicEngine::InputCube const& _cube );
+
+	/*virtual*/ void onInconsistentCubes(
+			FuzzyLogicEngine::InputCube const& _cube1, FuzzyLogicEngine::OutputTerm::Enum _outTerm1
+		,	FuzzyLogicEngine::InputCube const& _cube2, FuzzyLogicEngine::OutputTerm::Enum _outTerm2
+	);
+
+	/*virtual*/ void onRedundantCubes(
+			FuzzyLogicEngine::InputCube const& _cube1
+		,	FuzzyLogicEngine::InputCube const& _cube2
+		,	FuzzyLogicEngine::OutputTerm::Enum _outTerm
+	);
+
+/*------------------------------------------------------------------------------*/
+
+	QString cubeToString( FuzzyLogicEngine::InputCube const& _cube );
+
+	QString ruleToString(
+			FuzzyLogicEngine::InputCube const& _cube
+		,	FuzzyLogicEngine::OutputTerm::Enum _outTerm
+	);
+
+/*------------------------------------------------------------------------------*/
+
+	QString m_currentDetailedText;
 
 /*------------------------------------------------------------------------------*/
 

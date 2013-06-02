@@ -180,6 +180,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\headers\fle_checks_listener.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\headers\fle_cube_term.hpp"
 				>
 			</File>

@@ -5,6 +5,8 @@
 
 #include "fuzzy_logic_engine/headers/fle_export.hpp"
 
+#include <boost/optional.hpp>
+
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
 namespace FuzzyLogicEngine
@@ -12,6 +14,7 @@ namespace FuzzyLogicEngine
 
 	class KnowledgeBase;
 	class LinguaVariablesDictionary;
+	class ChecksListener;
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
@@ -37,13 +40,25 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	virtual bool isCompleteKB( KnowledgeBase const& _knowledgeBase ) const = 0;
+	virtual bool isCompleteKB(
+			KnowledgeBase const& _knowledgeBase 
+		,	boost::optional< ChecksListener & > _listener
+	) const = 0;
 
-	virtual bool isConsistentKB( KnowledgeBase const& _knowledgeBase ) const = 0;
+	virtual bool isConsistentKB(
+			KnowledgeBase const& _knowledgeBase 
+		,	boost::optional< ChecksListener & > _listener
+	) const = 0;
 
-	virtual bool isMinimalKB( KnowledgeBase const& _knowledgeBase ) const = 0;
+	virtual bool isMinimalKB(
+			KnowledgeBase const& _knowledgeBase 
+		,	boost::optional< ChecksListener & > _listener
+	) const = 0;
 
-	virtual bool isCoherentKB( KnowledgeBase const& _knowledgeBase ) const = 0;
+	virtual bool isCoherentKB(
+			KnowledgeBase const& _knowledgeBase 
+		,	boost::optional< ChecksListener & > _listener
+	) const = 0;
 
 	/*-----     -----     -----     -----      -----     -----*/
 

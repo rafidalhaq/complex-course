@@ -65,10 +65,17 @@ Analysis::initialize()
 
 void Analysis::completeness()
 {
-	bool isComplete = m_engine.checkForCompleteness();
+	QString details;
+
+	bool isComplete = m_engine.checkForCompleteness( details );
 
 	QString text("Completeness analysis finished. The rules are ");
-	text += isComplete ? "complete." : "not complete.";
+	if ( !isComplete )
+		text += "not ";
+	text += "complete.";
+
+	if ( !isComplete )
+		text += "\nThe following cubes are not covered:\n" + details;
 
 	QTextEdit* result = new QTextEdit;
 
@@ -84,16 +91,21 @@ void Analysis::completeness()
 
 void Analysis::consistency()
 {
-	bool isConsistent = m_engine.checkForConsistency();
+	QString details;
 
-	QString text(isConsistent?"consistent.":"not consistent.");
+	bool isConsistent = m_engine.checkForConsistency( details );
+
+	QString text("Consistency analysis finished. The rules are ");
+	if ( !isConsistent )
+		text += "not ";
+	text += "consistent.";
+
+	if ( !isConsistent )
+		text += "\nThe following rules are not consistent:\n" + details;
 
 	QTextEdit* result = new QTextEdit;
 
-	result->setText(
-		"Consistency analysis finished. The rules are "
-		+	text
-		);
+	result->setText( text );
 
 	m_ui.m_resultsTabber->addTab(result,"Consistency");
 
@@ -104,16 +116,21 @@ void Analysis::consistency()
 
 void Analysis::minimality()
 {
-	bool isMinimal = m_engine.checkForMinimality();
+	QString details;
 
-	QString text(isMinimal ? "minimal.":"not minimal.");
+	bool isMinimal = m_engine.checkForMinimality( details );
+
+	QString text("Minimality analysis finished. The rules are ");
+	if ( !isMinimal )
+		text += "not ";
+	text += "minimal.";
+
+	if ( !isMinimal )
+		text += "\nThe following cubes are redundant:\n" + details;
 
 	QTextEdit* result = new QTextEdit;
 
-	result->setText(
-		"Minimality analysis finished. The rules are "
-		+	text
-		);
+	result->setText( text );
 
 	m_ui.m_resultsTabber->addTab(result,"Minimality");
 

@@ -37,13 +37,25 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	/*virtual*/ bool isCompleteKB( KnowledgeBase const& _knowledgeBase ) const;
+	/*virtual*/ bool isCompleteKB(
+			KnowledgeBase const& _knowledgeBase 
+		,	boost::optional< ChecksListener & > _listener
+	) const;
 
-	/*virtual*/ bool isConsistentKB( KnowledgeBase const& _knowledgeBase ) const;
+	/*virtual*/ bool isConsistentKB(
+			KnowledgeBase const& _knowledgeBase 
+		,	boost::optional< ChecksListener & > _listener
+	) const;
 
-	/*virtual*/ bool isMinimalKB( KnowledgeBase const& _knowledgeBase ) const;
+	/*virtual*/ bool isMinimalKB(
+			KnowledgeBase const& _knowledgeBase 
+		,	boost::optional< ChecksListener & > _listener
+	) const;
 
-	/*virtual*/ bool isCoherentKB( KnowledgeBase const& _knowledgeBase ) const;
+	/*virtual*/ bool isCoherentKB(
+			KnowledgeBase const& _knowledgeBase 
+		,	boost::optional< ChecksListener & > _listener
+	) const;
 
 	/*-----     -----     -----     -----      -----     -----*/
 

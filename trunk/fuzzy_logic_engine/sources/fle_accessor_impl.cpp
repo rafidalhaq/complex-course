@@ -8,6 +8,8 @@
 
 #include "fuzzy_logic_engine/sources/fle_input_cube_impl.hpp"
 
+#include "fuzzy_logic_engine/headers/fle_checks_listener.hpp"
+
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
 namespace FuzzyLogicEngine
@@ -57,7 +59,10 @@ AccessorImpl::getLinguaVariablesDictionaryModifying()
 
 
 bool
-AccessorImpl::isCompleteKB( KnowledgeBase const& _knowledgeBase ) const
+AccessorImpl::isCompleteKB(
+		KnowledgeBase const& _knowledgeBase 
+	,	boost::optional< ChecksListener & > _listener
+) const
 {
 	AllCubesGenerator generator( getLinguaVariablesDictionary().getInputLinguaVariablesCount() );
 
@@ -78,8 +83,17 @@ AccessorImpl::isCompleteKB( KnowledgeBase const& _knowledgeBase ) const
 	}
 
 	generator.reset();
+	bool result = !generator.isValid();
 
-	return !generator.isValid();
+	if ( _listener )
+	{
+		for ( ; generator.isValid(); generator.next() )
+		{
+			_listener->onUncoveredCube( generator.getNextCube() );
+		}
+	}
+
+	return result;
 }
 
 
@@ -87,8 +101,13 @@ AccessorImpl::isCompleteKB( KnowledgeBase const& _knowledgeBase ) const
 
 
 bool
-AccessorImpl::isConsistentKB( KnowledgeBase const& _knowledgeBase ) const
+AccessorImpl::isConsistentKB(
+		KnowledgeBase const& _knowledgeBase 
+	,	boost::optional< ChecksListener & > _listener
+) const
 {
+	bool result = true;
+
 	for ( OutputTerm::Enum firstOutTerm = OutputTerm::OH; firstOutTerm != OutputTerm::B; )
 	{
 		for ( OutputTerm::Enum secondOutTerm = OutputTerm::next( firstOutTerm ); secondOutTerm != OutputTerm::Last; )
@@ -100,7 +119,15 @@ AccessorImpl::isConsistentKB( KnowledgeBase const& _knowledgeBase ) const
 					if ( _knowledgeBase.getInputCube( firstOutTerm, i )
 						.intersect( _knowledgeBase.getInputCube( secondOutTerm, j ) ).get()
 					)
-						return false;
+					{
+						if ( _listener )
+							_listener->onInconsistentCubes(
+									_knowledgeBase.getInputCube( firstOutTerm, i ), firstOutTerm
+								,	_knowledgeBase.getInputCube( secondOutTerm, j ), secondOutTerm
+							);
+
+						result = false;
+					}
 				}
 			}
 			secondOutTerm = OutputTerm::next( secondOutTerm );
@@ -108,7 +135,7 @@ AccessorImpl::isConsistentKB( KnowledgeBase const& _knowledgeBase ) const
 		firstOutTerm = OutputTerm::next( firstOutTerm );
 	}
 
-	return true;
+	return result;
 }
 
 
@@ -116,8 +143,13 @@ AccessorImpl::isConsistentKB( KnowledgeBase const& _knowledgeBase ) const
 
 
 bool
-AccessorImpl::isMinimalKB( KnowledgeBase const& _knowledgeBase ) const
+AccessorImpl::isMinimalKB(
+		KnowledgeBase const& _knowledgeBase 
+	,	boost::optional< ChecksListener & > _listener
+) const
 {
+	bool result = true;
+
 	for ( OutputTerm::Enum outTerm = OutputTerm::OH; outTerm != OutputTerm::Last; )
 	{
 		const unsigned int rulesCount = _knowledgeBase.getProductionRulesCount( outTerm );
@@ -126,13 +158,22 @@ AccessorImpl::isMinimalKB( KnowledgeBase const& _knowledgeBase ) const
 			for( unsigned int j = 0; ( j < rulesCount ) && ( i != j ); ++j )
 			{
 				if ( _knowledgeBase.getInputCube( outTerm, i ).intersect( _knowledgeBase.getInputCube( outTerm, j ) ).get() )
-					return false;
+				{
+					if ( _listener )
+						_listener->onRedundantCubes(
+								_knowledgeBase.getInputCube( outTerm, i )
+							,	_knowledgeBase.getInputCube( outTerm, j )
+							,	outTerm
+						);
+
+					result = false;
+				}
 			}
 		}
 		outTerm = OutputTerm::next( outTerm );
 	}
 
-	return true;
+	return result;
 }
 
 
@@ -140,7 +181,10 @@ AccessorImpl::isMinimalKB( KnowledgeBase const& _knowledgeBase ) const
 
 
 bool
-AccessorImpl::isCoherentKB( KnowledgeBase const& _knowledgeBase ) const
+AccessorImpl::isCoherentKB(
+		KnowledgeBase const& _knowledgeBase 
+	,	boost::optional< ChecksListener & > _listener
+) const
 {
 	std::auto_ptr< const InputCube > summ;
 	const unsigned int cubesCount = m_linguaVariablesDictionary.getInputLinguaVariablesCount();
