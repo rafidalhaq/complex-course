@@ -143,11 +143,7 @@ EngineController::makeCMRulesForm( QStringList & _destination )
 			FuzzyLogicEngine::InputCube const & currentCube =
 				minimizedKB.getInputCube((FuzzyLogicEngine::OutputTerm::Enum)outputTerm,ruleId);
 
-			for(int variableId = 0; variableId< currentCube.getTermsCount(); variableId++ )
-			{
-				line += FuzzyLogicEngine::CubeTerm::toShortString(
-					currentCube.getCubeTerm(variableId));
-			}
+			line += cubeToString( currentCube );
 
 			if(ruleId<rulesCount-1)
 				line+=", ";
@@ -183,12 +179,22 @@ void EngineController::addOutpuVariable( const QString & _name )
 
 
 bool
-EngineController::checkForCompleteness()
+EngineController::checkForCompleteness( QString & _detailed )
 {
 	FuzzyLogicEngine::Accessor const & accessor =
 		FuzzyLogicEngine::getAccessor();
 
-	return accessor.isCompleteKB(accessor.getKnowledgeBase().getMinimizedKnowledgeBase());
+	m_currentDetailedText.clear();
+
+	const bool result = accessor.isCompleteKB(
+			accessor.getKnowledgeBase().getMinimizedKnowledgeBase()
+		,	*this
+	);
+
+	if ( !m_currentDetailedText.isEmpty() )
+		_detailed += m_currentDetailedText + ".";
+
+	return result;
 }
 
 
@@ -196,12 +202,22 @@ EngineController::checkForCompleteness()
 
 
 bool
-EngineController::checkForConsistency()
+EngineController::checkForConsistency( QString & _detailed )
 {	
 	FuzzyLogicEngine::Accessor const & accessor =
 		FuzzyLogicEngine::getAccessor();
 
-	return accessor.isConsistentKB(accessor.getKnowledgeBase().getMinimizedKnowledgeBase());
+	m_currentDetailedText.clear();
+
+	const bool result = accessor.isConsistentKB(
+			accessor.getKnowledgeBase().getMinimizedKnowledgeBase()
+		,	*this
+	);
+
+	if ( !m_currentDetailedText.isEmpty() )
+		_detailed += m_currentDetailedText + ".";
+
+	return result;
 }
 
 
@@ -209,12 +225,22 @@ EngineController::checkForConsistency()
 
 
 bool
-EngineController::checkForMinimality()
+EngineController::checkForMinimality( QString & _detailed )
 {	
 	FuzzyLogicEngine::Accessor const & accessor =
 		FuzzyLogicEngine::getAccessor();
 
-	return accessor.isMinimalKB(accessor.getKnowledgeBase().getMinimizedKnowledgeBase());
+	m_currentDetailedText.clear();
+
+	const bool result = accessor.isMinimalKB(
+			accessor.getKnowledgeBase().getMinimizedKnowledgeBase()
+		,	*this
+	);
+
+	if ( !m_currentDetailedText.isEmpty() )
+		_detailed += m_currentDetailedText + ".";
+
+	return result;
 }
 
 
@@ -227,7 +253,12 @@ EngineController::checkForCoherence()
 	FuzzyLogicEngine::Accessor const & accessor =
 		FuzzyLogicEngine::getAccessor();
 
-	return accessor.isCoherentKB(accessor.getKnowledgeBase().getMinimizedKnowledgeBase());
+	m_currentDetailedText.clear();
+
+	return accessor.isCoherentKB(
+			accessor.getKnowledgeBase().getMinimizedKnowledgeBase()
+		,	boost::none
+	);
 }
 
 
@@ -256,6 +287,98 @@ EngineController::clearModels()
 	accessor.getKnowledgeBaseModifying().clear();
 	accessor.getLinguaVariablesDictionaryModifying().clear();
 
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+void
+EngineController::onUncoveredCube( FuzzyLogicEngine::InputCube const& _cube )
+{
+	if ( !m_currentDetailedText.isEmpty() )
+		m_currentDetailedText += ", ";
+
+	m_currentDetailedText += cubeToString( _cube );
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+void
+EngineController::onInconsistentCubes(
+		FuzzyLogicEngine::InputCube const& _cube1, FuzzyLogicEngine::OutputTerm::Enum _outTerm1
+	,	FuzzyLogicEngine::InputCube const& _cube2, FuzzyLogicEngine::OutputTerm::Enum _outTerm2
+)
+{
+	if ( !m_currentDetailedText.isEmpty() )
+		m_currentDetailedText += ";\n";
+
+	m_currentDetailedText +=
+			ruleToString( _cube1, _outTerm1 )
+		+	" and "
+		+	ruleToString( _cube2, _outTerm2 )
+	;
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+void
+EngineController::onRedundantCubes(
+		FuzzyLogicEngine::InputCube const& _cube1
+	,	FuzzyLogicEngine::InputCube const& _cube2
+	,	FuzzyLogicEngine::OutputTerm::Enum _outTerm
+)
+{
+	if ( !m_currentDetailedText.isEmpty() )
+		m_currentDetailedText += ";\n";
+
+	m_currentDetailedText +=
+			FuzzyLogicEngine::OutputTerm::toShortString( _outTerm )
+		+	": "
+		+	cubeToString( _cube1 )
+		+	" and "
+		+	cubeToString( _cube2 )
+	;
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+QString
+EngineController::cubeToString( FuzzyLogicEngine::InputCube const& _cube )
+{
+	QString result;
+
+	for( unsigned int variableId = 0; variableId< _cube.getTermsCount(); ++variableId )
+	{
+		result += FuzzyLogicEngine::CubeTerm::toShortString(
+			_cube.getCubeTerm( variableId )
+		);
+	}
+
+	return result;
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+QString
+EngineController::ruleToString(
+		FuzzyLogicEngine::InputCube const& _cube
+	,	FuzzyLogicEngine::OutputTerm::Enum _outTerm
+)
+{
+	QString result( FuzzyLogicEngine::OutputTerm::toShortString( _outTerm ) );
+	result += "->{";
+	result += cubeToString( _cube );
+	result += "}";
+	return result;
 }
 
 
