@@ -15,7 +15,7 @@ CubeTerm::Enum
 CubeTerm::concat( CubeTerm::Enum _e1, CubeTerm::Enum _e2 )
 {
 	if ( !isValidInputTerm( _e1 ) || !isValidInputTerm( _e2 ) )
-		throw std::exception();
+		FLE_INTERNAL_ERROR;
 
 	static std::map< std::pair< Enum, Enum >, Enum > table;
 	if ( table.empty() )

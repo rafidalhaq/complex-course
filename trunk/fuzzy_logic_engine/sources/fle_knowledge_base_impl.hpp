@@ -56,7 +56,7 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	/*virtual*/ boost::shared_ptr< KnowledgeBase > createCompactAndMinimizedKnowledgeBase();
+	/*virtual*/ KnowledgeBase const& getMinimizedKnowledgeBase() const;
 
 	/*-----     -----     -----     -----      -----     -----*/
 
@@ -77,6 +77,10 @@ private:
 		CoveredTermsMap;
 
 	CoveredTermsMap m_coveredTerms;
+
+	/*-----     -----     -----     -----      -----     -----*/
+
+	mutable boost::scoped_ptr< KnowledgeBaseImpl > m_minimizedKB;
 
 	/*-----     -----     -----     -----      -----     -----*/
 

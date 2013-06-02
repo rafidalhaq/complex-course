@@ -56,7 +56,7 @@ const unsigned int
 InputCubeImpl::calculateCodeDistance( InputCube const& _other ) const
 {
 	if ( _other.getTermsCount() != getTermsCount() )
-		throw std::exception();
+		FLE_INTERNAL_ERROR_WITH_DESCRIPTION( "operation applied on cubes of different sizes" );
 
 	InputCubeImpl const& otherImpl = static_cast< InputCubeImpl const& >( _other );
 	unsigned int result = 0;
@@ -133,7 +133,7 @@ InputCubeImpl::makeNewCube(
 ) const
 {
 	if ( _other.getTermsCount() != getTermsCount() )
-		throw std::exception();
+		FLE_INTERNAL_ERROR;
 
 	InputCubeImpl const& otherImpl = static_cast< InputCubeImpl const& >( _other );
 	InputTermsVector permuttedVector = permuteToGetBestMatching( otherImpl );
@@ -220,7 +220,7 @@ std::auto_ptr< const InputCube >
 InputCubeImpl::bond( InputCube const& _other ) const
 {
 	if ( _other.getTermsCount() != getTermsCount() )
-		throw std::exception();
+		FLE_INTERNAL_ERROR;
 
 	InputCubeImpl const& otherImpl = static_cast< InputCubeImpl const& >( _other );
 	unsigned int equalTermsCount = 0;

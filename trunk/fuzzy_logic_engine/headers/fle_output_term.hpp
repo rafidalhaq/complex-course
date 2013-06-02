@@ -3,6 +3,10 @@
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
+#include "fuzzy_logic_engine/headers/fle_exceptions.hpp"
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
 namespace FuzzyLogicEngine
 {
 
@@ -40,7 +44,7 @@ struct OutputTerm
 		}
 
 		if ( !table.contains( _str ) )
-			throw std::exception();
+			FLE_INTERNAL_ERROR_WITH_DESCRIPTION( QString( "wrong output term: \"" ) + _str + "\"" );
 
 		return table.value( _str );
 	}
@@ -60,7 +64,7 @@ struct OutputTerm
 		}
 
 		if ( !table.contains( _enum ) )
-			throw std::exception();
+			FLE_INTERNAL_ERROR;
 
 		return table.value( _enum );
 	}

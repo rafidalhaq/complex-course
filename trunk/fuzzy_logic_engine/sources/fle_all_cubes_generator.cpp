@@ -32,7 +32,7 @@ InputCube const&
 AllCubesGenerator::getNextCube() const
 {
 	if ( !isValid() )
-		throw std::exception();
+		FLE_INTERNAL_ERROR;
 
 	return *m_lastCube;
 }
@@ -101,7 +101,7 @@ AllCubesGenerator::intializeCubesSequence( const unsigned int _cubeLength )
 			*it = CubeTerm::next( *it );
 		else
 		{
-			do 
+			do
 			{
 				++it;
 			} while ( ( it != currentCombination.end() ) && ( *it == alphabet.back() ) );
@@ -117,7 +117,7 @@ AllCubesGenerator::intializeCubesSequence( const unsigned int _cubeLength )
 	}
 
 	if ( m_allCombinations.size() != std::pow( (long double)alphabet.size(), (int)_cubeLength ) )
-		throw std::exception();
+		FLE_INTERNAL_ERROR;
 }
 
 
