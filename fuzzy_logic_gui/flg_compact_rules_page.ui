@@ -114,5 +114,22 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>m_addButton</sender>
+   <signal>clicked()</signal>
+   <receiver>m_inputVector</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>357</x>
+     <y>72</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>106</x>
+     <y>71</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
