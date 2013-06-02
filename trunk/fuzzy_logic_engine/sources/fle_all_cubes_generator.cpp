@@ -16,9 +16,8 @@ namespace FuzzyLogicEngine
 
 AllCubesGenerator::AllCubesGenerator( const unsigned int _cubeLength )
 	:	m_lastCube( new InputCubeImpl )
-	,	m_currentCubeIndex( 0 )
 {
-	m_allCombinations.reserve( _cubeLength );
+	m_currentCubeIt = m_allCombinations.begin();
 
 	intializeCubesSequence( _cubeLength );
 	reset();
@@ -44,13 +43,12 @@ AllCubesGenerator::getNextCube() const
 void
 AllCubesGenerator::next()
 {
-	++m_currentCubeIndex;
+	++m_currentCubeIt;
 
 	if ( !isValid() )
 		return;
 
-	InputTermsVector termsCopy( m_allCombinations[ m_currentCubeIndex ] );
-	static_cast< InputCubeImpl * >( m_lastCube.get() )->swap( termsCopy );
+	updateCurrentCube();
 }
 
 
@@ -60,7 +58,7 @@ AllCubesGenerator::next()
 bool
 AllCubesGenerator::isValid() const
 {
-	return m_currentCubeIndex < m_allCombinations.size();
+	return m_currentCubeIt != m_allCombinations.end();
 
 }
 
@@ -71,10 +69,9 @@ AllCubesGenerator::isValid() const
 void
 AllCubesGenerator::reset()
 {
-	m_currentCubeIndex = 0;
+	m_currentCubeIt = m_allCombinations.begin();
 
-	InputTermsVector termsCopy( m_allCombinations[ m_currentCubeIndex ] );
-	static_cast< InputCubeImpl * >( m_lastCube.get() )->swap( termsCopy );
+	updateCurrentCube();
 }
 
 
@@ -118,6 +115,31 @@ AllCubesGenerator::intializeCubesSequence( const unsigned int _cubeLength )
 
 	if ( m_allCombinations.size() != std::pow( (long double)alphabet.size(), (int)_cubeLength ) )
 		FLE_INTERNAL_ERROR;
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+void
+AllCubesGenerator::removeCurrentCube()
+{
+	m_currentCubeIt = m_allCombinations.erase( m_currentCubeIt );
+	updateCurrentCube();
+}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
+
+void
+AllCubesGenerator::updateCurrentCube()
+{
+	if ( m_allCombinations.empty() )
+		return;
+
+	InputTermsVector termsCopy( *m_currentCubeIt );
+	static_cast< InputCubeImpl * >( m_lastCube.get() )->swap( termsCopy );
 }
 
 
