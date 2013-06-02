@@ -3,6 +3,10 @@
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
+#include "fuzzy_logic_engine/headers/fle_exceptions.hpp"
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
 namespace FuzzyLogicEngine
 {
 
@@ -53,14 +57,14 @@ struct CubeTerm
 		}
 
 		if ( !table.contains( _str ) )
-			throw std::exception();
+			FLE_INTERNAL_ERROR_WITH_DESCRIPTION( QString( "wrong cube term: \"" ) + _str + "\"" );
 
 		Enum enumVal = table.value( _str );
 
 		// CHECKME: this whole function is made considering it will be called only on the input values
 		// and the valid inputs aren't all the alphabet
 		if ( !isValidInputTerm( enumVal ) )
-			throw std::exception();
+			FLE_INTERNAL_ERROR_WITH_DESCRIPTION( QString( "\"" ) + _str + "\"" + " is not a valid input term" );
 
 		return enumVal;
 	}
@@ -82,7 +86,7 @@ struct CubeTerm
 		}
 
 		if ( !table.contains( _enum ) )
-			throw std::exception();
+			FLE_INTERNAL_ERROR;
 
 		return table.value( _enum );
 	}

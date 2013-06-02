@@ -127,8 +127,7 @@ EngineController::makeCMRulesForm( QStringList & _destination )
 {
 	using namespace FuzzyLogicEngine;
 
-	m_currentMinimized =
-		getAccessorModifying().getKnowledgeBaseModifying().createCompactAndMinimizedKnowledgeBase();
+	KnowledgeBase const& minimizedKB = getAccessor().getKnowledgeBase().getMinimizedKnowledgeBase();
 
 	for (int outputTerm = OutputTerm::OH; outputTerm<OutputTerm::Last; outputTerm++ )
 	{
@@ -137,12 +136,12 @@ EngineController::makeCMRulesForm( QStringList & _destination )
 			+	"->{"
 		);
 
-		int rulesCount = m_currentMinimized->getProductionRulesCount((FuzzyLogicEngine::OutputTerm::Enum)outputTerm);
+		int rulesCount = minimizedKB.getProductionRulesCount((FuzzyLogicEngine::OutputTerm::Enum)outputTerm);
 
 		for (int ruleId = 0; ruleId < rulesCount;ruleId++)
 		{
 			FuzzyLogicEngine::InputCube const & currentCube =
-				m_currentMinimized->getInputCube((FuzzyLogicEngine::OutputTerm::Enum)outputTerm,ruleId);
+				minimizedKB.getInputCube((FuzzyLogicEngine::OutputTerm::Enum)outputTerm,ruleId);
 
 			for(int variableId = 0; variableId< currentCube.getTermsCount(); variableId++ )
 			{
@@ -189,7 +188,7 @@ EngineController::checkForCompleteness()
 	FuzzyLogicEngine::Accessor const & accessor =
 		FuzzyLogicEngine::getAccessor();
 
-	return accessor.isCompleteKB(accessor.getKnowledgeBase());
+	return accessor.isCompleteKB(accessor.getKnowledgeBase().getMinimizedKnowledgeBase());
 }
 
 
@@ -202,7 +201,7 @@ EngineController::checkForConsistency()
 	FuzzyLogicEngine::Accessor const & accessor =
 		FuzzyLogicEngine::getAccessor();
 
-	return accessor.isConsistentKB(accessor.getKnowledgeBase());
+	return accessor.isConsistentKB(accessor.getKnowledgeBase().getMinimizedKnowledgeBase());
 }
 
 
@@ -215,7 +214,7 @@ EngineController::checkForMinimality()
 	FuzzyLogicEngine::Accessor const & accessor =
 		FuzzyLogicEngine::getAccessor();
 
-	return accessor.isMinimalKB(accessor.getKnowledgeBase());
+	return accessor.isMinimalKB(accessor.getKnowledgeBase().getMinimizedKnowledgeBase());
 }
 
 
@@ -228,7 +227,7 @@ EngineController::checkForCoherence()
 	FuzzyLogicEngine::Accessor const & accessor =
 		FuzzyLogicEngine::getAccessor();
 
-	return accessor.isCoherentKB(accessor.getKnowledgeBase());
+	return accessor.isCoherentKB(accessor.getKnowledgeBase().getMinimizedKnowledgeBase());
 }
 
 

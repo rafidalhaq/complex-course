@@ -68,7 +68,7 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	virtual boost::shared_ptr< KnowledgeBase > createCompactAndMinimizedKnowledgeBase() = 0;
+	virtual KnowledgeBase const& getMinimizedKnowledgeBase() const = 0;
 
 	/*-----     -----     -----     -----      -----     -----*/
 

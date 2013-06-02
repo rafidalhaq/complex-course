@@ -42,7 +42,7 @@ KnowledgeBaseImpl::getInputCube( OutputTerm::Enum _term, const unsigned int _ind
 	std::advance( rules.first, _index );
 
 	if ( rules.first == m_rules.end() )
-		throw std::exception();
+		FLE_INTERNAL_ERROR;
 
 	return * rules.first->second;
 }
@@ -84,6 +84,8 @@ KnowledgeBaseImpl::addProductionRule( InputTermsVectorNonConstRef _inputs, Outpu
 		m_rules.insert( std::make_pair( _outTerm, newCube.release() ) );
 	}
 
+	m_minimizedKB.reset();
+
 	return insertedCount;
 }
 
@@ -96,6 +98,7 @@ KnowledgeBaseImpl::clear()
 {
 	m_rules.clear();
 	m_coveredTerms.clear();
+	m_minimizedKB.reset();
 }
 
 
@@ -150,10 +153,13 @@ KnowledgeBaseImpl::calculateConditionsCount() const
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
 
-boost::shared_ptr< KnowledgeBase >
-KnowledgeBaseImpl::createCompactAndMinimizedKnowledgeBase()
+KnowledgeBase const&
+KnowledgeBaseImpl::getMinimizedKnowledgeBase() const
 {
-	boost::shared_ptr< KnowledgeBaseImpl > minimizedKB( new KnowledgeBaseImpl );
+	if ( m_minimizedKB )
+		return *m_minimizedKB;
+
+	m_minimizedKB.reset( new KnowledgeBaseImpl );
 
 	for ( OutputTerm::Enum outTerm = OutputTerm::OH; outTerm != OutputTerm::Last; )
 	{
@@ -161,11 +167,11 @@ KnowledgeBaseImpl::createCompactAndMinimizedKnowledgeBase()
 			std::pair< ProductionRulesMap::const_iterator, ProductionRulesMap::const_iterator > rules
 				= m_rules.equal_range( outTerm );
 			for( ProductionRulesMap::const_iterator it = rules.first; it != rules.second; ++it )
-				minimizedKB->m_rules.insert( std::make_pair( outTerm, it->second->clone().release() ) );
+				m_minimizedKB->m_rules.insert( std::make_pair( outTerm, it->second->clone().release() ) );
 		}
 
 		std::pair< ProductionRulesMap::iterator, ProductionRulesMap::iterator > rules
-			= minimizedKB->m_rules.equal_range( outTerm );
+			= m_minimizedKB->m_rules.equal_range( outTerm );
 		ProductionRulesMap::iterator it1 = rules.first, it2 = rules.first;
 		std::auto_ptr< const InputCube > cube;
 		bool triggeredReplacement = false;
@@ -178,12 +184,12 @@ KnowledgeBaseImpl::createCompactAndMinimizedKnowledgeBase()
 				cube = it1->second->bond( * it2->second );
 				if( cube.get() )
 				{
-					minimizedKB->m_rules.erase( it1 );
-					minimizedKB->m_rules.erase( it2 );
-					minimizedKB->m_rules.insert(
+					m_minimizedKB->m_rules.erase( it1 );
+					m_minimizedKB->m_rules.erase( it2 );
+					m_minimizedKB->m_rules.insert(
 						std::make_pair( outTerm, static_cast< const InputCubeImpl * >( cube.release() ) )
 					);
-					rules = minimizedKB->m_rules.equal_range( outTerm );
+					rules = m_minimizedKB->m_rules.equal_range( outTerm );
 					it1 = rules.first;
 					it2 = rules.first;
 					triggeredReplacement = true;
@@ -199,7 +205,7 @@ KnowledgeBaseImpl::createCompactAndMinimizedKnowledgeBase()
 		outTerm = OutputTerm::next( outTerm );
 	}
 
-	return minimizedKB;
+	return *m_minimizedKB;
 }
 
 

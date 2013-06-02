@@ -184,6 +184,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\headers\fle_exceptions.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\headers\fle_export.hpp"
 				>
 			</File>
@@ -221,6 +225,10 @@
 			</File>
 			<File
 				RelativePath=".\sources\fle_accessor_impl.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\sources\fle_exceptions.cpp"
 				>
 			</File>
 			<Filter
