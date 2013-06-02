@@ -66,22 +66,20 @@ AccessorImpl::isCompleteKB( KnowledgeBase const& _knowledgeBase ) const
 		for( unsigned int i = 0; i < _knowledgeBase.getProductionRulesCount( outTerm ); ++i )
 		{
 			generator.reset();
-			bool triggeredNonEmptyIntersect = false;
-			for ( ; generator.isValid(); generator.next() )
+			while ( generator.isValid() )
 			{
 				if ( generator.getNextCube().intersect( _knowledgeBase.getInputCube( outTerm, i ) ).get() )
-				{
-					triggeredNonEmptyIntersect = true;
-					break;
-				}
+					generator.removeCurrentCube();
+				else
+					generator.next();
 			}
-			if ( !triggeredNonEmptyIntersect )
-				return false;
 		}
 		outTerm = OutputTerm::next( outTerm );
 	}
 
-	return true;
+	generator.reset();
+
+	return !generator.isValid();
 }
 
 

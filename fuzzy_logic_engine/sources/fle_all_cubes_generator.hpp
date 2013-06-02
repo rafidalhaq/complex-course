@@ -34,6 +34,8 @@ public:
 
 	void reset();
 
+	void removeCurrentCube();
+
 	/*-----     -----     -----     -----      -----     -----*/
 
 private:
@@ -42,13 +44,19 @@ private:
 
 	void intializeCubesSequence( const unsigned int _cubeLength );
 
+	void updateCurrentCube();
+
 	/*-----     -----     -----     -----      -----     -----*/
 
 	boost::scoped_ptr< InputCube > m_lastCube;
 
-	std::vector< InputTermsVector > m_allCombinations;
+	std::list< InputTermsVector > m_allCombinations;
 
-	unsigned int m_currentCubeIndex;
+	typedef
+		std::list< InputTermsVector >::iterator
+		CubesIterator;
+
+	CubesIterator m_currentCubeIt;
 
 	/*-----     -----     -----     -----      -----     -----*/
 
