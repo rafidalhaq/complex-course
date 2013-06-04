@@ -39,6 +39,10 @@ public slots:
 
 	void toCompactFormPage();
 
+	void saveProject();
+
+	void loadProject();
+
 /*------------------------------------------------------------------------------*/
 
 private:

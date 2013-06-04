@@ -73,21 +73,34 @@ CompactRules::~CompactRules()
 void
 CompactRules::onAddPress()
 {
+	if(m_ui.m_inputVector->text().size()< m_engine.getInputVariablesCount())
+	{
+		showError("Too short input vector!");
+		return;
+	}
+
 	int lineNumber = m_ui.m_rulesList->count();
 
 	unsigned int concatenations =
 		m_engine.addRule(m_ui.m_inputVector->text(),m_ui.m_outputCombo->currentText());
 
-	m_ui.m_rulesList->addItem(
-			QString::number(lineNumber+1)
-		+	". "
-		+	m_ui.m_inputVector->text()
-		+	"->"
-		+	m_ui.m_outputCombo->currentText()
-		+	" ("
-		+	QString::number(concatenations)
-		+	")"
-	);
+	if(concatenations)
+	{
+		m_ui.m_rulesList->addItem(
+				QString::number(lineNumber+1)
+			+	". "
+			+	m_ui.m_inputVector->text()
+			+	"->"
+			+	m_ui.m_outputCombo->currentText()
+			+	" ("
+			+	QString::number(concatenations)
+			+	")"
+		);
+	}
+	else
+	{
+		showError("This cube is already covered!");
+	}
 }
 
 /*------------------------------------------------------------------------------*/
@@ -168,12 +181,18 @@ CompactRules::refillRules()
 
 		QString rule = currentText.section(". ",1);
 
-		m_engine.addRule(
-				rule.section("->", 0,0)	// input
-			,	rule.section("->", 1).section(" (",0,0)	// output
+		QString cubesCount = QString::number( m_engine.addRule(
+					rule.section("->", 0,0)	// input
+				,	rule.section("->", 1).section(" (",0,0)	// output
+			)
 		);
 
-		item->setText(QString::number(row+1)+". "+ rule);
+		item->setText(
+				QString::number(row+1)
+			+	". "
+			+	rule.section(" (",0,0) // rule itself
+			+	" (" + cubesCount + ")" ) 
+		;
 	}
 }
 
@@ -208,6 +227,26 @@ CompactRules::showAnalysisView()
 	}
 
 }
+
+/*------------------------------------------------------------------------------*/
+
+void CompactRules::closeDocks()
+{
+	if( m_analysisDock)
+		m_analysisDock->close();
+	if( m_extensiveDock)
+		m_extensiveDock->close();
+}
+
+/*------------------------------------------------------------------------------*/
+
+
+void
+CompactRules::showError(QString const & _text)
+{
+	QMessageBox::warning(this, "Error", _text);
+}
+
 
 /*------------------------------------------------------------------------------*/
 
