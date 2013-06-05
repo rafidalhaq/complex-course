@@ -4,6 +4,7 @@
 	Version="9,00"
 	Name="fuzzy_logic_gui"
 	ProjectGUID="{0FD7BB70-EE58-4E4B-AF7E-3B2630674EFA}"
+	RootNamespace="fuzzy_logic_gui"
 	Keyword="Qt4VSv1.0"
 	TargetFrameworkVersion="0"
 	>
@@ -584,6 +585,10 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\fuzzy_logic_gui.rc"
+			>
+		</File>
 		<File
 			RelativePath=".\main.cpp"
 			>

@@ -27,7 +27,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Step 1 - Variables:</string>
+        <string>Add Variables:</string>
        </property>
       </widget>
      </item>

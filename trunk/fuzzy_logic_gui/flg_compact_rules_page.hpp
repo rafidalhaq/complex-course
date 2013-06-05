@@ -62,6 +62,10 @@ public:
 
 	void closeDocks();
 
+	void collectRules( QStringList & _rules );
+
+	void applyRules( QStringList const & _rules );
+
 /*------------------------------------------------------------------------------*/
 
 protected slots:
@@ -85,6 +89,8 @@ private:
 	void refillRules();
 
 	void showError(QString const & _text);
+
+	void updateViews();
 
 /*------------------------------------------------------------------------------*/
 

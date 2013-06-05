@@ -6,6 +6,8 @@
 #include "fuzzy_logic_engine/headers/fle_lingua_variables_dictionary.hpp"
 #include "fuzzy_logic_engine/headers/fle_knowledge_base.hpp"
 
+#include "boost/foreach.hpp"
+
 /*------------------------------------------------------------------------------*/
 
 namespace FuzzyLogic{
@@ -98,7 +100,7 @@ EngineController::makeFullRulesForm( QStringList & _destination )
 				lvDict.getInputLinguaVariable(variableId);
 
 			line += currVar.getName();
-			line += " equals ";
+			line += " is ";
 
 			line += FuzzyLogicEngine::CubeTerm::toShortString(currentCube[variableId]);
 
@@ -110,7 +112,7 @@ EngineController::makeFullRulesForm( QStringList & _destination )
 
 		line+=" then ";
 		line+=lvDict.getOutputLinguaVariable(0).getName();
-		line+=" equals ";
+		line+=" is ";
 		line+= FuzzyLogicEngine::OutputTerm::toShortString( currentRule.second );
 
 		_destination.push_back(line);
@@ -397,6 +399,55 @@ EngineController::ruleToString(
 	result += cubeToString( _cube );
 	result += "}";
 	return result;
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+void
+EngineController::collectVariables(QStringList & _variables)
+{
+	FuzzyLogicEngine::Accessor const & accessor =
+		FuzzyLogicEngine::getAccessor();
+
+	int inCount = accessor.getLinguaVariablesDictionary().getInputLinguaVariablesCount();
+	int outCount = accessor.getLinguaVariablesDictionary().getOutputLinguaVariablesCount();
+
+	for(int i = 0; i<inCount; i++)
+	{
+		_variables.push_back(
+				"i-"
+			+	accessor.getLinguaVariablesDictionary().getInputLinguaVariable(i).getName()
+		);
+	}
+	for(int o = 0; o<outCount; o++)
+	{
+		_variables.push_back(
+			"o-"
+			+	accessor.getLinguaVariablesDictionary().getOutputLinguaVariable(o).getName()
+		);
+	}
+
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+void
+EngineController::addVariables(QStringList const & _variables)
+{
+	BOOST_FOREACH(QString current, _variables)
+	{
+		QString prefix = current.section("-",0,0);
+		QString name = current.section("-",1,1);
+
+		if(prefix == "i")
+			addInputVariable(name);
+		else
+			addOutpuVariable(name);
+	}
 }
 
 
