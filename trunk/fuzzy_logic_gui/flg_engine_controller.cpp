@@ -248,17 +248,22 @@ EngineController::checkForMinimality( QString & _detailed )
 
 
 bool
-EngineController::checkForCoherence()
+EngineController::checkForCoherence( QString & _detailed )
 {	
 	FuzzyLogicEngine::Accessor const & accessor =
 		FuzzyLogicEngine::getAccessor();
 
 	m_currentDetailedText.clear();
 
-	return accessor.isCoherentKB(
+	const bool result = accessor.isCoherentKB(
 			accessor.getKnowledgeBase().getMinimizedKnowledgeBase()
-		,	boost::none
+		,	*this
 	);
+
+	if ( !m_currentDetailedText.isEmpty() )
+		_detailed += m_currentDetailedText + ".";
+
+	return result;
 }
 
 
@@ -343,6 +348,19 @@ EngineController::onRedundantCubes(
 		+	" and "
 		+	cubeToString( _cube2 )
 	;
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+void
+EngineController::onInconsistentTerm( FuzzyLogicEngine::OutputTerm::Enum _outTerm )
+{
+	if ( !m_currentDetailedText.isEmpty() )
+		m_currentDetailedText += ", ";
+
+	m_currentDetailedText += FuzzyLogicEngine::OutputTerm::toShortString( _outTerm );
 }
 
 

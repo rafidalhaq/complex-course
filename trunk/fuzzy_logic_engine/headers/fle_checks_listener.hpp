@@ -36,6 +36,8 @@ public:
 		,	OutputTerm::Enum _outTerm
 	) = 0;
 
+	virtual void onInconsistentTerm( OutputTerm::Enum _outTerm ) = 0;
+
 	/*-----     -----     -----     -----      -----     -----*/
 
 }; // class ChecksListener

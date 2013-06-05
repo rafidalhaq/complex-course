@@ -54,7 +54,7 @@ public:
 
 	bool checkForMinimality( QString & _detailed );
 
-	bool checkForCoherence();
+	bool checkForCoherence( QString & _detailed );
 
 	void clearModels();
 
@@ -76,6 +76,8 @@ private:
 		,	FuzzyLogicEngine::InputCube const& _cube2
 		,	FuzzyLogicEngine::OutputTerm::Enum _outTerm
 	);
+
+	/*virtual*/ void onInconsistentTerm( FuzzyLogicEngine::OutputTerm::Enum _outTerm );
 
 /*------------------------------------------------------------------------------*/
 

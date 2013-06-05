@@ -141,16 +141,21 @@ void Analysis::minimality()
 
 void Analysis::coherence()
 {
-	bool isCoherent = m_engine.checkForCoherence();
+	QString details;
 
-	QString text(isCoherent ? "coherent.":"not coherent.");
+	bool isCoherent = m_engine.checkForCoherence( details );
+
+	QString text("Coherence analysis finished. The rules are ");
+	if ( !isCoherent )
+		text += "not ";
+	text += "coherent.";
+
+	if ( !isCoherent )
+		text += "\nThe following cube sets are not coherent with any other:\n" + details;
 
 	QTextEdit* result = new QTextEdit;
 
-	result->setText(
-		"Coherence analysis finished. The rules are "
-		+	text
-		);
+	result->setText( text );
 
 	m_ui.m_resultsTabber->addTab(result,"Coherence");
 

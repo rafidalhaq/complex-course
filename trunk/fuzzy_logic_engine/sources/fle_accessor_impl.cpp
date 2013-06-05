@@ -187,8 +187,8 @@ AccessorImpl::isCoherentKB(
 ) const
 {
 	std::auto_ptr< const InputCube > summ;
-	const unsigned int cubesCount = m_linguaVariablesDictionary.getInputLinguaVariablesCount();
-	std::set< unsigned int > significantVariables;
+	const unsigned int variablesCount = m_linguaVariablesDictionary.getInputLinguaVariablesCount();
+	std::set< OutputTerm::Enum > coherents;
 
 	for ( OutputTerm::Enum firstOutTerm = OutputTerm::OH; firstOutTerm != OutputTerm::B; )
 	{
@@ -200,14 +200,10 @@ AccessorImpl::isCoherentKB(
 				{
 					summ = _knowledgeBase.getInputCube( firstOutTerm, i )
 						.summ( _knowledgeBase.getInputCube( secondOutTerm, j ) );
-					if ( summ->getUndefinedValuesCount() == ( cubesCount - 1 ) )
+					if ( summ->getUndefinedValuesCount() == ( variablesCount - 1 ) )
 					{
-						unsigned int significantVariablePosition = 0;
-						for( ; significantVariablePosition < cubesCount; ++significantVariablePosition )
-							if ( summ->getCubeTerm( significantVariablePosition ) != CubeTerm::U )
-								break;
-						if ( significantVariables.count( significantVariablePosition ) == 0 )
-							significantVariables.insert( significantVariablePosition );
+						coherents.insert( firstOutTerm );
+						coherents.insert( secondOutTerm );
 					}
 				}
 			}
@@ -216,7 +212,19 @@ AccessorImpl::isCoherentKB(
 		firstOutTerm = OutputTerm::next( firstOutTerm );
 	}
 
-	return significantVariables.size() == cubesCount;
+	const bool result = coherents.size() == variablesCount;
+
+	if ( !result && _listener )
+	{
+		for ( OutputTerm::Enum outTerm = OutputTerm::OH; outTerm != OutputTerm::Last; )
+		{
+			if ( !coherents.count( outTerm ) )
+				_listener->onInconsistentTerm( outTerm );
+			outTerm = OutputTerm::next( outTerm );
+		}
+	}
+
+	return result;
 }
 
 
