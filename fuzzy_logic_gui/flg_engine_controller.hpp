@@ -58,6 +58,10 @@ public:
 
 	void clearModels();
 
+	void collectVariables(QStringList & _variables);
+
+	void addVariables(QStringList const & _variables);
+
 /*------------------------------------------------------------------------------*/
 
 private:

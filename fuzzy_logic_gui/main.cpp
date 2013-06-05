@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
 	FuzzyLogic::Gui::MainWindow window(&mainApp);
 	try
 	{
+		//mainApp.setWindowIcon(QPixmap("icon.png"));
 		window.show();
 		return mainApp.exec();
 	}

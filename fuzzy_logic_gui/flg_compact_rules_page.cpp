@@ -100,7 +100,10 @@ CompactRules::onAddPress()
 	else
 	{
 		showError("This cube is already covered!");
+		return;
 	}
+
+	updateViews();
 }
 
 /*------------------------------------------------------------------------------*/
@@ -115,6 +118,8 @@ CompactRules::onItemDoubleClicked(QListWidgetItem * _item)
 	delete targetItem;
 
 	refillRules();
+
+	updateViews();
 
 }
 
@@ -240,6 +245,66 @@ void CompactRules::closeDocks()
 
 /*------------------------------------------------------------------------------*/
 
+void CompactRules::collectRules( QStringList & _rules )
+{
+	for(int row = 0; row < m_ui.m_rulesList->count(); row++)
+	{
+		QListWidgetItem * item =
+			m_ui.m_rulesList->item(row);
+		QString currentText = item->text();
+
+		QString rule = currentText.section(". ",1);
+		
+		_rules.push_back(
+				rule.section("->", 0,0)	// input
+			+	"-"
+			+	rule.section("->", 1).section(" (",0,0)	// output
+		);
+	}
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+void CompactRules::applyRules( QStringList const & _rules )
+{
+	for(int rule = 0; rule < _rules.size(); rule++)
+	{
+		QString input = _rules[rule].section("-",0,0);
+		QString output = _rules[rule].section("-",1,1);
+
+		unsigned int concatenations =
+			m_engine.addRule(input,output);
+
+		if(concatenations)
+		{
+			m_ui.m_rulesList->addItem(
+				QString::number(rule+1)
+				+	". "
+				+	input
+				+	"->"
+				+	output
+				+	" ("
+				+	QString::number(concatenations)
+				+	")"
+				);
+		}
+	}
+}
+
+/*------------------------------------------------------------------------------*/
+
+void
+CompactRules::updateViews()
+{
+	if(m_analysisDock)
+		m_analysisView->initialize();
+	if(m_extensiveDock)
+		showExtensiveView();
+}
+
+/*------------------------------------------------------------------------------*/
 
 void
 CompactRules::showError(QString const & _text)
