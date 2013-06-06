@@ -135,7 +135,7 @@ AllCubesGenerator::removeCurrentCube()
 void
 AllCubesGenerator::updateCurrentCube()
 {
-	if ( m_allCombinations.empty() )
+	if ( m_allCombinations.empty() || m_currentCubeIt == m_allCombinations.end() )
 		return;
 
 	InputTermsVector termsCopy( *m_currentCubeIt );
