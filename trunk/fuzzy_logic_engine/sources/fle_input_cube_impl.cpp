@@ -3,6 +3,7 @@
 #include "fuzzy_logic_engine/sources/fle_input_cube_impl.hpp"
 
 #include <algorithm>
+#include <boost/bind.hpp>
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
@@ -35,7 +36,7 @@ InputCubeImpl::getCubeTerm( unsigned int _index ) const
 const unsigned int
 InputCubeImpl::getRank() const
 {
-	return termsCount( CubeTerm::X );
+	return std::count_if( m_terms.begin(), m_terms.end(), ! boost::bind( &CubeTerm::isPrimitiveTerm, _1 ) );
 }
 
 

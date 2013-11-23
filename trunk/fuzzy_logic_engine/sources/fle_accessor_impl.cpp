@@ -212,7 +212,7 @@ AccessorImpl::isCoherentKB(
 		firstOutTerm = OutputTerm::next( firstOutTerm );
 	}
 
-	const bool result = coherents.size() == variablesCount;
+	const bool result = coherents.size() == OutputTerm::Count;
 
 	if ( !result && _listener )
 	{

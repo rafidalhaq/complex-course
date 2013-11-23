@@ -4,6 +4,8 @@
 
 #include <algorithm>
 
+#include <boost/unordered_map.hpp> 
+
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
 namespace FuzzyLogicEngine
@@ -152,6 +154,54 @@ KnowledgeBaseImpl::calculateConditionsCount() const
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/
 
+	struct CubeInfo
+	{
+		int m_countH, m_countC, m_countB;
+
+		CubeInfo()
+			:	m_countH( 0 )
+			,	m_countC( 0 )
+			,	m_countB( 0 )
+		{}
+
+		static CubeInfo create( const InputCube& _ic )
+		{
+			CubeInfo info;
+			for( unsigned int i = 0; i < _ic.getTermsCount(); ++i )
+			{
+				switch ( _ic.getCubeTerm( i ) )
+				{
+				case CubeTerm::H:
+					++info.m_countH;
+					break;
+				case CubeTerm::C:
+					++info.m_countC;
+					break;
+				case CubeTerm::B:
+					++info.m_countB;
+					break;
+				default:
+					break;
+				}
+			}
+			return info;
+		}
+	};
+
+	std::size_t hash_value( CubeInfo const& _i )
+	{
+		// it is really necessary to return the same hash value all the times
+		// to get necessary behavior
+		std::size_t seed = 0;
+		//boost::hash_combine( seed, _i.m_countH );
+		//boost::hash_combine( seed, _i.m_countC );
+		//boost::hash_combine( seed, _i.m_countB );
+		return seed;
+	}
+
+
+/*------      ------      ------      ------      ------      ------      ------      ------*/
+
 
 KnowledgeBase const&
 KnowledgeBaseImpl::getMinimizedKnowledgeBase() const
@@ -161,48 +211,153 @@ KnowledgeBaseImpl::getMinimizedKnowledgeBase() const
 
 	m_minimizedKB.reset( new KnowledgeBaseImpl );
 
+	struct CubeBondPossibilityChecker
+	{
+		// bond is possible if cubes differ by one place
+		// that is, for input terms (three possible), when
+		// count of one is equal, and count of another twos' differs by one
+		bool operator () ( const CubeInfo& _ic1, const CubeInfo& _ic2 ) const
+		{
+			return	( _ic1.m_countH == _ic2.m_countH ) && ( _ic1.m_countC == _ic2.m_countC ) && ( _ic1.m_countB == _ic2.m_countB )
+				||	( _ic1.m_countH == _ic2.m_countH ) && ( abs( _ic1.m_countC - _ic2.m_countC ) == 1 ) && ( abs( _ic1.m_countB - _ic2.m_countB ) == 1 )
+				||	( _ic1.m_countC == _ic2.m_countC ) && ( abs( _ic1.m_countH - _ic2.m_countH ) == 1 ) && ( abs( _ic1.m_countB - _ic2.m_countB ) == 1 )
+				||	( _ic1.m_countB == _ic2.m_countB ) && ( abs( _ic1.m_countC - _ic2.m_countC ) == 1 ) && ( abs( _ic1.m_countH - _ic2.m_countH ) == 1 )
+			;
+
+		}
+	};
+
+	typedef
+		boost::unordered_multimap< CubeInfo, boost::shared_ptr< const InputCubeImpl >, boost::hash< CubeInfo >, CubeBondPossibilityChecker >
+		MultimapToBond;
+
+	MultimapToBond m_bondsMultimap;
+
 	for ( OutputTerm::Enum outTerm = OutputTerm::OH; outTerm != OutputTerm::Last; )
 	{
 		{
 			std::pair< ProductionRulesMap::const_iterator, ProductionRulesMap::const_iterator > rules
 				= m_rules.equal_range( outTerm );
 			for( ProductionRulesMap::const_iterator it = rules.first; it != rules.second; ++it )
-				m_minimizedKB->m_rules.insert( std::make_pair( outTerm, it->second->clone().release() ) );
+			{
+				m_bondsMultimap.insert(
+					std::make_pair( CubeInfo::create( *it->second ), it->second )
+				);
+			}
 		}
 
-		std::pair< ProductionRulesMap::iterator, ProductionRulesMap::iterator > rules
-			= m_minimizedKB->m_rules.equal_range( outTerm );
-		ProductionRulesMap::iterator it1 = rules.first, it2 = rules.first;
-		std::auto_ptr< const InputCube > cube;
-		bool triggeredReplacement = false;
-		while( it1 != rules.second )
-		{
-			for( ; it2 != rules.second; ++it2 )
+		// now, m_bondsMultimap holds cubes sorted by the bond possibility
+		// they're accessible by equal_range
+
+		// for debugging purposes - boost::unordered doesn't have visualizer
+		/*{
+			QString result;
+
+			for( MultimapToBond::const_iterator it = m_bondsMultimap.begin(); it != m_bondsMultimap.end(); )
 			{
-				if ( it1 == it2 )
-					continue;
-				cube = it1->second->bond( * it2->second );
-				if( cube.get() )
+				std::pair< MultimapToBond::const_iterator, MultimapToBond::const_iterator > boundCubes
+					= m_bondsMultimap.equal_range( it->first );
+				for( ; boundCubes.first != boundCubes.second; ++boundCubes.first )
 				{
-					m_minimizedKB->m_rules.erase( it1 );
-					m_minimizedKB->m_rules.erase( it2 );
-					m_minimizedKB->m_rules.insert(
-						std::make_pair( outTerm, static_cast< const InputCubeImpl * >( cube.release() ) )
-					);
-					rules = m_minimizedKB->m_rules.equal_range( outTerm );
-					it1 = rules.first;
-					it2 = rules.first;
-					triggeredReplacement = true;
-					break;
+					for( unsigned int i = 0; i < boundCubes.first->second->getTermsCount(); ++i )
+						result += FuzzyLogicEngine::CubeTerm::toShortString(
+							boundCubes.first->second->getCubeTerm( i )
+						);
+					result += ", ";
 				}
+				it = boundCubes.second;
+				result += " :::: ";
 			}
-			if ( !triggeredReplacement )
-				++it1;
-			else
-				triggeredReplacement = false;
+		}*/
+
+		for( MultimapToBond::const_iterator it = m_bondsMultimap.begin(); it != m_bondsMultimap.end(); )
+		{
+			std::pair< MultimapToBond::iterator, MultimapToBond::iterator > boundCubes
+				= m_bondsMultimap.equal_range( it->first );
+			MultimapToBond::iterator it1 = boundCubes.first, it2 = boundCubes.first;
+			std::auto_ptr< const InputCube > cube;
+			bool triggeredReplacement = false;
+			while( it1 != boundCubes.second )
+			{
+				for( ; it2 != boundCubes.second; ++it2 )
+				{
+					if ( it1 == it2 )
+						continue;
+					cube = it1->second->bond( * it2->second );
+					if( cube.get() && ( cube->getRank() == 1 ) )
+					{
+						CubeInfo info = it->first;
+						m_bondsMultimap.erase( it1 );
+						m_bondsMultimap.erase( it2 );
+						m_bondsMultimap.insert(
+							std::make_pair( info, static_cast< const InputCubeImpl * >( cube.release() ) )
+						);
+						boundCubes = m_bondsMultimap.equal_range( info );
+						it1 = boundCubes.first;
+						it2 = boundCubes.first;
+						triggeredReplacement = true;
+
+						// for debugging purposes - boost::unordered doesn't have visualizer
+							/*QString result;
+							{
+
+								for( MultimapToBond::const_iterator itint = m_bondsMultimap.begin(); itint != m_bondsMultimap.end(); )
+								{
+									std::pair< MultimapToBond::const_iterator, MultimapToBond::const_iterator > boundCubesInt
+										= m_bondsMultimap.equal_range( itint->first );
+									for( ; boundCubesInt.first != boundCubesInt.second; ++boundCubesInt.first )
+									{
+										for( unsigned int i = 0; i < boundCubesInt.first->second->getTermsCount(); ++i )
+											result += FuzzyLogicEngine::CubeTerm::toShortString(
+												boundCubesInt.first->second->getCubeTerm( i )
+											);
+										result += ", ";
+									}
+									itint = boundCubesInt.second;
+									result += " :::: ";
+								}
+							}*/
+
+
+						break;
+					}
+				}
+				if ( !triggeredReplacement )
+					++it1;
+				else
+					triggeredReplacement = false;
+			}
+			it = boundCubes.second;
+		}
+	
+		// for debugging purposes - boost::unordered doesn't have visualizer
+		/*QString result;
+		{
+
+			for( MultimapToBond::const_iterator it = m_bondsMultimap.begin(); it != m_bondsMultimap.end(); )
+			{
+				std::pair< MultimapToBond::const_iterator, MultimapToBond::const_iterator > boundCubes
+					= m_bondsMultimap.equal_range( it->first );
+				for( ; boundCubes.first != boundCubes.second; ++boundCubes.first )
+				{
+					for( unsigned int i = 0; i < boundCubes.first->second->getTermsCount(); ++i )
+						result += FuzzyLogicEngine::CubeTerm::toShortString(
+							boundCubes.first->second->getCubeTerm( i )
+						);
+					result += ", ";
+				}
+				it = boundCubes.second;
+				result += " :::: ";
+			}
+		}*/
+
+		for( MultimapToBond::const_iterator it = m_bondsMultimap.begin(); it != m_bondsMultimap.end(); ++it )
+		{
+			m_minimizedKB->m_rules.insert( std::make_pair( outTerm, it->second ) );
 		}
 
 		outTerm = OutputTerm::next( outTerm );
+		m_bondsMultimap.clear();
 	}
 
 	return *m_minimizedKB;

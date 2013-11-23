@@ -31,7 +31,7 @@ struct CubeTerm
 
 	/*-----     -----     -----     -----      -----     -----*/
 
-	static bool isValidInputTerm( Enum _e )
+	static bool isPrimitiveTerm( Enum _e )
 	{
 		return _e == H || _e == C || _e == B;
 	}
@@ -63,7 +63,7 @@ struct CubeTerm
 
 		// CHECKME: this whole function is made considering it will be called only on the input values
 		// and the valid inputs aren't all the alphabet
-		if ( !isValidInputTerm( enumVal ) )
+		if ( !isPrimitiveTerm( enumVal ) )
 			FLE_INTERNAL_ERROR_WITH_DESCRIPTION( QString( "\"" ) + _str + "\"" + " is not a valid input term" );
 
 		return enumVal;

@@ -33,6 +33,9 @@ MainWindow::MainWindow(QApplication* _mainApp)
 	QObject::connect(m_ui.actionExit, SIGNAL(triggered()),
                       _mainApp, SLOT(quit() ));
 
+	QObject::connect(m_ui.actionAbout, SIGNAL(triggered()),
+                      this, SLOT(about() ));
+
 	QObject::connect(m_projectSetupPage->getNextButton(), SIGNAL(clicked()),
                       this, SLOT(toCompactFormPage()));
 
@@ -191,6 +194,29 @@ MainWindow::loadProject()
 	m_compactRulesPage->applyRules(rules);
 
 } // MainWindow::loadProject
+
+
+/*------------------------------------------------------------------------------*/
+
+
+void
+MainWindow::about()
+{
+	QMessageBox::about( this, "About FuzzyLogic",
+		"FuzzyLogic is a simple program that helps to check fuzzy logic rules correctness.\n"
+		"\n"
+		"It was made as a term paper when studying in KhNURE (Ukraine)\n"
+		"\n"
+		"Developers:\n"
+		"\t- Vasiliy Belous: model and core algorithms implementation\n"
+		"\t- Ivan Zyenovich: GUI and project save/load implementation\n"
+		"\n"
+		"This program is distributed under the terms of the GNU GPL v3.\n"
+		"\n"
+		"\tCopyright (c) 2013 Ivan Zyenovich and Vasiliy Belous"
+	);
+
+} // MainWindow::about
 
 
 /*------------------------------------------------------------------------------*/
