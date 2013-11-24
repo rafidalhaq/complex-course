@@ -62,6 +62,8 @@ private:
 
 	void showError(QString const & _text);
 
+	void addTab(QString const & _title, QString const & _text);
+
 /*------------------------------------------------------------------------------*/
 
 private:

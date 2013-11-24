@@ -77,12 +77,7 @@ void Analysis::completeness()
 	if ( !isComplete )
 		text += "\nThe following cubes are not covered:\n" + details;
 
-	QTextEdit* result = new QTextEdit;
-
-	result->setText( text );
-
-	m_ui.m_resultsTabber->addTab(result,"Completeness");
-
+	addTab( "Completeness", text );
 }
 
 
@@ -103,12 +98,7 @@ void Analysis::consistency()
 	if ( !isConsistent )
 		text += "\nThe following rules are not consistent:\n" + details;
 
-	QTextEdit* result = new QTextEdit;
-
-	result->setText( text );
-
-	m_ui.m_resultsTabber->addTab(result,"Consistency");
-
+	addTab( "Consistency", text );
 }
 
 /*------------------------------------------------------------------------------*/
@@ -128,12 +118,7 @@ void Analysis::minimality()
 	if ( !isMinimal )
 		text += "\nThe following cubes are redundant:\n" + details;
 
-	QTextEdit* result = new QTextEdit;
-
-	result->setText( text );
-
-	m_ui.m_resultsTabber->addTab(result,"Minimality");
-
+	addTab( "Minimality", text );
 }
 
 /*------------------------------------------------------------------------------*/
@@ -153,12 +138,7 @@ void Analysis::coherence()
 	if ( !isCoherent )
 		text += "\nThe following cube sets are not coherent with any other:\n" + details;
 
-	QTextEdit* result = new QTextEdit;
-
-	result->setText( text );
-
-	m_ui.m_resultsTabber->addTab(result,"Coherence");
-
+	addTab( "Coherence", text );
 }
 
 /*------------------------------------------------------------------------------*/
@@ -182,6 +162,22 @@ void
 Analysis::showError(QString const & _text)
 {
 	QMessageBox::warning(this, "Error", _text);
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
+void
+Analysis::addTab(QString const & _title, QString const & _text)
+{
+	QTextEdit* result = new QTextEdit( _text );
+
+	result->setReadOnly( true );
+
+	m_ui.m_resultsTabber->setCurrentIndex(
+		m_ui.m_resultsTabber->addTab(result,_title)
+	);
 }
 
 
