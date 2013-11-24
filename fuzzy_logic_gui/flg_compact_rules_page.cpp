@@ -50,11 +50,11 @@ CompactRules::CompactRules(
 	validationRegex+="{";
 	validationRegex+=QString::number(m_engine.getInputVariablesCount());
 	validationRegex+="}";
-	m_vectorValidator = new UppercaseRegExpValidator(QRegExp(validationRegex));
+	m_vectorValidator.reset( new UppercaseRegExpValidator(QRegExp(validationRegex)) );
 
-	m_ui.m_inputVector->setValidator(m_vectorValidator);
+	m_ui.m_inputVector->setValidator(m_vectorValidator.data());
 
-	m_analysisView = new Analysis( m_engine );
+	m_analysisView.reset( new Analysis( m_engine ) );
 
 }
 
@@ -64,7 +64,8 @@ CompactRules::CompactRules(
 
 CompactRules::~CompactRules()
 {
-
+	m_mainWindow.removeDockWidget(m_extensiveDock.data());
+	m_mainWindow.removeDockWidget(m_analysisDock.data());
 }
 
 
@@ -160,14 +161,14 @@ CompactRules::showExtensiveView()
 	}
 	else // no dock was created yet
 	{
-		m_extensiveDock = new QDockWidget(tr("Extensive Form"), this);
+		m_extensiveDock.reset( new QDockWidget(tr("Extensive Form"), this) );
 		m_extensiveDock->setAllowedAreas(Qt::LeftDockWidgetArea |
 			Qt::RightDockWidgetArea);
 		m_extensiveDock->setWidget(m_extensiveView);
 
 		m_extensiveView->setMinimumSize(370,100);
 
-		m_mainWindow.addDockWidget(Qt::RightDockWidgetArea, m_extensiveDock);
+		m_mainWindow.addDockWidget(Qt::RightDockWidgetArea, m_extensiveDock.data());
 	}
 }
 
@@ -224,23 +225,13 @@ CompactRules::showAnalysisView()
 	{
 		m_analysisView->initialize();
 
-		m_analysisDock = new QDockWidget("Analysis", this);
+		m_analysisDock.reset( new QDockWidget("Analysis", this) );
 		m_analysisDock->setAllowedAreas(Qt::LeftDockWidgetArea |
 			Qt::RightDockWidgetArea);
-		m_analysisDock->setWidget(m_analysisView);
-		m_mainWindow.addDockWidget(Qt::LeftDockWidgetArea, m_analysisDock);
+		m_analysisDock->setWidget(m_analysisView.data());
+		m_mainWindow.addDockWidget(Qt::LeftDockWidgetArea, m_analysisDock.data());
 	}
 
-}
-
-/*------------------------------------------------------------------------------*/
-
-void CompactRules::closeDocks()
-{
-	if( m_analysisDock)
-		m_analysisDock->close();
-	if( m_extensiveDock)
-		m_extensiveDock->close();
 }
 
 /*------------------------------------------------------------------------------*/

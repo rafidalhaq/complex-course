@@ -51,15 +51,17 @@ private:
 
 /*------------------------------------------------------------------------------*/
 
+	void resetPages();
+
+/*------------------------------------------------------------------------------*/
+
 	Ui::Form_MainWindow m_ui;
 
-	Pages::ProjectSetup* m_projectSetupPage;
+	QScopedPointer< Pages::ProjectSetup > m_projectSetupPage;
 
-	Pages::CompactRules* m_compactRulesPage;
+	QScopedPointer< Pages::CompactRules > m_compactRulesPage;
 
 	Gui::EngineController m_engine;
-
-	QWidget * m_centralWidget;
 
 /*------------------------------------------------------------------------------*/
 

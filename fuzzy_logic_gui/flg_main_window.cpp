@@ -15,11 +15,8 @@ namespace Gui{
 
 MainWindow::MainWindow(QApplication* _mainApp)
 	:	QMainWindow()
-	,	m_compactRulesPage(NULL)
 {
 	m_ui.setupUi(this);
-
-	m_projectSetupPage = new Pages::ProjectSetup;
 
 	QObject::connect(m_ui.actionNew_Project, SIGNAL(triggered()),
                       this, SLOT(newProject()));
@@ -35,10 +32,6 @@ MainWindow::MainWindow(QApplication* _mainApp)
 
 	QObject::connect(m_ui.actionAbout, SIGNAL(triggered()),
                       this, SLOT(about() ));
-
-	QObject::connect(m_projectSetupPage->getNextButton(), SIGNAL(clicked()),
-                      this, SLOT(toCompactFormPage()));
-
 }
 
 
@@ -47,7 +40,9 @@ MainWindow::MainWindow(QApplication* _mainApp)
 
 MainWindow::~MainWindow()
 {
-
+	if ( m_projectSetupPage )
+		m_projectSetupPage->disconnect();
+	setCentralWidget(NULL);
 }
 
 
@@ -56,18 +51,16 @@ MainWindow::~MainWindow()
 void
 MainWindow::newProject()
 {
-	if(m_compactRulesPage)
-		m_compactRulesPage->closeDocks();
+	resetPages();
 
 	m_engine.clearModels();
 
-	setCentralWidget(NULL);
-	m_projectSetupPage = new Pages::ProjectSetup;
+	m_projectSetupPage.reset( new Pages::ProjectSetup );
 
 	QObject::connect(m_projectSetupPage->getNextButton(), SIGNAL(clicked()),
 		this, SLOT(toCompactFormPage()));
 
-	setCentralWidget(m_projectSetupPage);
+	setCentralWidget(m_projectSetupPage.data());
 }
 
 
@@ -79,10 +72,11 @@ MainWindow::toCompactFormPage()
 	if(!m_projectSetupPage->commitChanges(m_engine))
 		return;
 
-	setCentralWidget(NULL);
-	m_compactRulesPage = new Pages::CompactRules(m_engine,*this);
+	resetPages();
 
-	setCentralWidget(m_compactRulesPage);
+	m_compactRulesPage.reset( new Pages::CompactRules(m_engine,*this) );
+
+	setCentralWidget(m_compactRulesPage.data());
 
 } // MainWindow::toCompactFormPage
 
@@ -126,10 +120,7 @@ MainWindow::saveProject()
 void
 MainWindow::loadProject()
 {
-	setCentralWidget(NULL);
-
-	if(m_compactRulesPage)
-		m_compactRulesPage->closeDocks();
+	resetPages();
 
 	m_engine.clearModels();
 
@@ -189,8 +180,8 @@ MainWindow::loadProject()
 			rules.push_back(first+"-"+second);
 	}
 
-	m_compactRulesPage = new Pages::CompactRules(m_engine,*this);
-	setCentralWidget(m_compactRulesPage);
+	m_compactRulesPage.reset( new Pages::CompactRules(m_engine,*this) );
+	setCentralWidget(m_compactRulesPage.data());
 	m_compactRulesPage->applyRules(rules);
 
 } // MainWindow::loadProject
@@ -217,6 +208,24 @@ MainWindow::about()
 	);
 
 } // MainWindow::about
+
+
+/*------------------------------------------------------------------------------*/
+
+
+void
+MainWindow::resetPages()
+{
+	if ( m_projectSetupPage )
+		m_projectSetupPage->disconnect();
+
+	m_projectSetupPage.reset();
+
+	setCentralWidget(NULL);
+
+	m_compactRulesPage.reset();
+
+} // MainWindow::resetPages
 
 
 /*------------------------------------------------------------------------------*/
