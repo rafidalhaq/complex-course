@@ -60,8 +60,6 @@ public:
 
 /*------------------------------------------------------------------------------*/
 
-	void closeDocks();
-
 	void collectRules( QStringList & _rules );
 
 	void applyRules( QStringList const & _rules );
@@ -100,19 +98,19 @@ private:
 
 	Ui::CompactRulesUi m_ui;
 
-	QRegExpValidator* m_vectorValidator;
+	QScopedPointer< QRegExpValidator > m_vectorValidator;
+
+	QTextEdit * m_extensiveView;
+
+	QScopedPointer< QDockWidget > m_extensiveDock;
+
+	QScopedPointer< QDockWidget > m_analysisDock;
+
+	QScopedPointer< Analysis > m_analysisView;
 
 	EngineController & m_engine;
 
-	QTextEdit* m_extensiveView;
-
 	QMainWindow & m_mainWindow;
-
-	QDockWidget * m_extensiveDock;
-
-	QDockWidget * m_analysisDock;
-
-	Analysis * m_analysisView;
 
 
 /*------------------------------------------------------------------------------*/

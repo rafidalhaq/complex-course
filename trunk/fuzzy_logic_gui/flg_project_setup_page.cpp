@@ -26,9 +26,8 @@ ProjectSetup::ProjectSetup(QWidget *parent)
 	connect(m_ui.m_variableName, SIGNAL(returnPressed()),
 		this, SLOT(onAddButton()));
 
-	QString validationRegex("\\w+");
 	m_ui.m_variableName->setValidator(
-		new QRegExpValidator(QRegExp(validationRegex)));
+		new QRegExpValidator(QRegExp("\\w+")));
 
 }
 
@@ -38,8 +37,7 @@ ProjectSetup::ProjectSetup(QWidget *parent)
 
 ProjectSetup::~ProjectSetup()
 {
-
-
+	delete m_ui.m_variableName->validator();
 }
 
 
