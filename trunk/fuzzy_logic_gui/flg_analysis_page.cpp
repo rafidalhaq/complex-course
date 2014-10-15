@@ -135,8 +135,7 @@ void Analysis::coherence()
 		text += "not ";
 	text += "coherent.";
 
-	if ( !isCoherent )
-		text += "\nThe following cube sets are not coherent with any other:\n" + details;
+	text += details;
 
 	addTab( "Coherence", text );
 }
@@ -171,9 +170,10 @@ Analysis::showError(QString const & _text)
 void
 Analysis::addTab(QString const & _title, QString const & _text)
 {
-	QTextEdit* result = new QTextEdit( _text );
+	QTextEdit* result = new QTextEdit();
 
 	result->setReadOnly( true );
+	result->setPlainText( _text );
 
 	m_ui.m_resultsTabber->setCurrentIndex(
 		m_ui.m_resultsTabber->addTab(result,_title)

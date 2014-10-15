@@ -198,12 +198,15 @@ AccessorImpl::isCoherentKB(
 			{
 				for( unsigned int j = 0; j < _knowledgeBase.getProductionRulesCount( secondOutTerm ); ++j )
 				{
-					summ = _knowledgeBase.getInputCube( firstOutTerm, i )
-						.summ( _knowledgeBase.getInputCube( secondOutTerm, j ) );
+					InputCube const& firstInCube = _knowledgeBase.getInputCube( firstOutTerm, i );
+					InputCube const& secondInCube = _knowledgeBase.getInputCube( secondOutTerm, j );
+					summ = firstInCube.summ( secondInCube );
 					if ( summ->getUndefinedValuesCount() == ( variablesCount - 1 ) )
 					{
 						coherents.insert( firstOutTerm );
 						coherents.insert( secondOutTerm );
+						if ( _listener )
+							_listener->onAdjacentCubes( firstInCube, firstOutTerm, secondInCube, secondOutTerm );
 					}
 				}
 			}

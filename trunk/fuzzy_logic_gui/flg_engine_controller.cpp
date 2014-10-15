@@ -256,14 +256,20 @@ EngineController::checkForCoherence( QString & _detailed )
 		FuzzyLogicEngine::getAccessor();
 
 	m_currentDetailedText.clear();
+	m_anotherCurrentDetailedText.clear();
 
 	const bool result = accessor.isCoherentKB(
 			accessor.getKnowledgeBase().getMinimizedKnowledgeBase()
 		,	*this
 	);
 
+	QString newLine( '\n' );
+
+	if ( !m_anotherCurrentDetailedText.isEmpty() )
+		_detailed += newLine + "The following rules are adjacent:" + newLine + m_anotherCurrentDetailedText + '.';
+
 	if ( !m_currentDetailedText.isEmpty() )
-		_detailed += m_currentDetailedText + ".";
+		_detailed += newLine + "The following cube sets are not coherent with any other:" + newLine + m_currentDetailedText + ".";
 
 	return result;
 }
@@ -369,6 +375,26 @@ EngineController::onInconsistentTerm( FuzzyLogicEngine::OutputTerm::Enum _outTer
 /*------------------------------------------------------------------------------*/
 
 
+void
+EngineController::onAdjacentCubes(
+		FuzzyLogicEngine::InputCube const& _cube1, FuzzyLogicEngine::OutputTerm::Enum _outTerm1
+	,	FuzzyLogicEngine::InputCube const& _cube2, FuzzyLogicEngine::OutputTerm::Enum _outTerm2
+)
+{
+	if ( !m_anotherCurrentDetailedText.isEmpty() )
+		m_anotherCurrentDetailedText += ";\n";
+
+	m_anotherCurrentDetailedText +=
+			ruleToString( _cube1, _outTerm1 )
+		+	" and "
+		+	ruleToString( _cube2, _outTerm2 )
+	;
+}
+
+
+/*------------------------------------------------------------------------------*/
+
+
 QString
 EngineController::cubeToString( FuzzyLogicEngine::InputCube const& _cube )
 {
@@ -394,10 +420,9 @@ EngineController::ruleToString(
 	,	FuzzyLogicEngine::OutputTerm::Enum _outTerm
 )
 {
-	QString result( FuzzyLogicEngine::OutputTerm::toShortString( _outTerm ) );
-	result += "->{";
-	result += cubeToString( _cube );
-	result += "}";
+	QString result( '{' + cubeToString( _cube ) + '}' );
+	result += "->";
+	result += FuzzyLogicEngine::OutputTerm::toShortString( _outTerm );
 	return result;
 }
 
