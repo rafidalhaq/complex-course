@@ -40,6 +40,15 @@ public:
 
 	/*-----     -----     -----     -----      -----     -----*/
 
+	// for consisnency analysis:
+
+	virtual void onAdjacentCubes(
+			InputCube const& _cube1, OutputTerm::Enum _outTerm1
+		,	InputCube const& _cube2, OutputTerm::Enum _outTerm2
+	) = 0;
+
+	/*-----     -----     -----     -----      -----     -----*/
+
 }; // class ChecksListener
 
 /*------      ------      ------      ------      ------      ------      ------      ------*/

@@ -83,6 +83,11 @@ private:
 
 	/*virtual*/ void onInconsistentTerm( FuzzyLogicEngine::OutputTerm::Enum _outTerm );
 
+	/*virtual*/ void onAdjacentCubes(
+			FuzzyLogicEngine::InputCube const& _cube1, FuzzyLogicEngine::OutputTerm::Enum _outTerm1
+		,	FuzzyLogicEngine::InputCube const& _cube2, FuzzyLogicEngine::OutputTerm::Enum _outTerm2
+	);
+
 /*------------------------------------------------------------------------------*/
 
 	QString cubeToString( FuzzyLogicEngine::InputCube const& _cube );
@@ -95,6 +100,8 @@ private:
 /*------------------------------------------------------------------------------*/
 
 	QString m_currentDetailedText;
+
+	QString m_anotherCurrentDetailedText;
 
 /*------------------------------------------------------------------------------*/
 
