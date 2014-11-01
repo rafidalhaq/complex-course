@@ -193,8 +193,8 @@ MainWindow::loadProject()
 void
 MainWindow::about()
 {
-	QMessageBox::about( this, "About FuzzyLogic",
-		"FuzzyLogic is a simple program that helps to check fuzzy logic rules correctness.\n"
+	QMessageBox::about( this, "About Production Rules Analyzer",
+		"Production Rules Analyzer is a simple program that helps to check fuzzy logic rules correctness.\n"
 		"\n"
 		"It was made as a term paper when studying in KhNURE (Ukraine)\n"
 		"\n"

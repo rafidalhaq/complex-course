@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>667</width>
-    <height>454</height>
+    <height>484</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Fuzzy Logic</string>
+   <string>Production Rules Analyzer</string>
   </property>
   <widget class="QWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>667</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFIle">
