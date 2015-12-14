@@ -1,0 +1,1 @@
+An Editor for Fuzzy logic rules. Made as a course work in Kharkov National University of Radioeletronics.
